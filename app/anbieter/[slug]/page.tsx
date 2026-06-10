@@ -4,6 +4,7 @@ import { notFound } from 'next/navigation'
 import type { Criteria, CriteriaValue } from '@/lib/types'
 import PromoCodeButton from '@/components/PromoCodeButton'
 import ReviewSection from '@/components/reviews/ReviewSection'
+import SiteHeader from '@/components/SiteHeader'
 
 // ISR: Detailseiten alle 3600 Sekunden (1h) neu generieren
 export const revalidate = 3600
@@ -82,28 +83,7 @@ export default async function ProviderPage({ params }: { params: Promise<{ slug:
 
   return (
     <div className="relative min-h-screen grid-bg">
-      {/* Nav */}
-      <header className="relative z-10 flex items-center justify-between px-6 md:px-12 py-6 border-b"
-        style={{ borderColor: 'var(--border)' }}>
-        <Link href="/" className="flex items-center gap-2">
-          <div className="w-8 h-8 rounded flex items-center justify-center font-bold text-sm"
-            style={{ background: 'var(--accent)', color: '#0a0a0a' }}>₿</div>
-          <span className="font-bold text-sm tracking-widest uppercase" style={{ letterSpacing: '0.15em' }}>
-            Bitcoin Navigator
-          </span>
-        </Link>
-        <div className="flex items-center gap-3 text-sm">
-          {provider.categories.map(cat => (
-            categoryBackLinks[cat.slug] && (
-              <Link key={cat.slug} href={categoryBackLinks[cat.slug]}
-                className="hover:text-white transition-colors"
-                style={{ color: 'var(--text-secondary)' }}>
-                ← {cat.name}
-              </Link>
-            )
-          ))}
-        </div>
-      </header>
+      <SiteHeader />
 
       <main className="relative z-10 px-6 md:px-12 py-12 max-w-4xl">
 

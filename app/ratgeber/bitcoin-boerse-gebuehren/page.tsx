@@ -1,4 +1,5 @@
 import Link from "next/link";
+import SiteHeader from '@/components/SiteHeader';
 
 export const metadata = {
   title: "Warum die Wahl der Bitcoin-Börse mehr kostet als du denkst | Bitcoin Navigator",

@@ -1,4 +1,5 @@
 import Link from "next/link";
+import SiteHeader from '@/components/SiteHeader';
 
 export const metadata = {
   title: "Was ist ein Hardware Wallet – und wann brauchst du wirklich eines? | Bitcoin Navigator",

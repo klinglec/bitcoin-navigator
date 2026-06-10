@@ -1,4 +1,5 @@
 import Link from "next/link";
+import SiteHeader from '@/components/SiteHeader';
 
 export const metadata = {
   title: "Seed Phrase: Der häufigste Fehler beim Bitcoin-Sichern | Bitcoin Navigator",

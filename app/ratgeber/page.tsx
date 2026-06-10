@@ -1,4 +1,5 @@
 import Link from "next/link";
+import SiteHeader from '@/components/SiteHeader';
 
 export const metadata = {
   title: "Bitcoin Ratgeber – Wissen für DACH | Bitcoin Navigator",

@@ -1,4 +1,5 @@
 import CategoryCard, { CategoryData } from "@/components/CategoryCard";
+import SiteHeader from "@/components/SiteHeader";
 import Link from "next/link";
 
 const categories: CategoryData[] = [
@@ -64,31 +65,7 @@ const stats = [
 export default function Home() {
   return (
     <div className="relative min-h-screen grid-bg">
-      {/* Nav */}
-      <header
-        className="relative z-10 flex items-center justify-between px-6 md:px-12 py-6 border-b"
-        style={{ borderColor: "var(--border)" }}
-      >
-        <div className="flex items-center gap-2">
-          <div
-            className="w-8 h-8 rounded flex items-center justify-center font-bold text-sm"
-            style={{ background: "var(--accent)", color: "#0a0a0a" }}
-          >
-            ₿
-          </div>
-          <span
-            className="font-bold text-sm tracking-widest uppercase"
-            style={{ letterSpacing: "0.15em" }}
-          >
-            Bitcoin Navigator
-          </span>
-        </div>
-        <nav className="flex items-center gap-6 text-sm" style={{ color: "var(--text-secondary)" }}>
-          <Link href="/vergleich/boersen" className="hover:text-white transition-colors hidden sm:block">Börsen</Link>
-          <Link href="/vergleich/hardware-wallets" className="hover:text-white transition-colors hidden sm:block">Hardware Wallets</Link>
-          <Link href="/ratgeber" className="hover:text-white transition-colors hidden sm:block">Ratgeber</Link>
-        </nav>
-      </header>
+      <SiteHeader />
 
       <main className="relative z-10">
         {/* ── HERO ── */}
