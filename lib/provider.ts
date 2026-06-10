@@ -18,7 +18,7 @@ export interface ProviderDetail {
   is_verified: boolean
   description: string | null
   founded_year: number | null
-  categories: { slug: string; name: string }[]
+  categories: { id: string; slug: string; name: string }[]
   criteriaGroups: {
     category: { slug: string; name: string }
     items: { criteria: Criteria; value: CriteriaValue }[]

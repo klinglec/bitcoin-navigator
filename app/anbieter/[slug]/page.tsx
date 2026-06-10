@@ -3,6 +3,7 @@ import Link from 'next/link'
 import { notFound } from 'next/navigation'
 import type { Criteria, CriteriaValue } from '@/lib/types'
 import PromoCodeButton from '@/components/PromoCodeButton'
+import ReviewSection from '@/components/reviews/ReviewSection'
 
 // ISR: Detailseiten alle 3600 Sekunden (1h) neu generieren
 export const revalidate = 3600
@@ -196,6 +197,13 @@ export default async function ProviderPage({ params }: { params: Promise<{ slug:
             )}
           </section>
         ))}
+
+        {/* ── Reviews ── */}
+        <ReviewSection
+          providerId={provider.id}
+          categoryId={provider.categories[0]?.id ?? ''}
+          providerName={provider.name}
+        />
 
         {/* ── Zurück zum Vergleich ── */}
         <div className="mt-12 pt-8 border-t flex flex-wrap gap-4" style={{ borderColor: 'var(--border)' }}>
