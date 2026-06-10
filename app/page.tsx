@@ -1,5 +1,4 @@
 import CategoryCard, { CategoryData } from "@/components/CategoryCard";
-import EmailCapture from "@/components/EmailCapture";
 import Link from "next/link";
 
 const categories: CategoryData[] = [
@@ -85,30 +84,19 @@ export default function Home() {
           </span>
         </div>
         <nav className="flex items-center gap-6 text-sm" style={{ color: "var(--text-secondary)" }}>
-          <Link href="/vergleich/boersen" className="hover:text-white transition-colors hidden sm:block">
-            Börsen
-          </Link>
-          <Link href="/vergleich/hardware-wallets" className="hover:text-white transition-colors hidden sm:block">
-            Hardware Wallets
-          </Link>
+          <Link href="/vergleich/boersen" className="hover:text-white transition-colors hidden sm:block">Börsen</Link>
+          <Link href="/vergleich/hardware-wallets" className="hover:text-white transition-colors hidden sm:block">Hardware Wallets</Link>
+          <Link href="/ratgeber" className="hover:text-white transition-colors hidden sm:block">Ratgeber</Link>
         </nav>
       </header>
 
       <main className="relative z-10">
         {/* ── HERO ── */}
         <section className="px-6 md:px-12 pt-24 pb-20 max-w-5xl">
-          <div
-            className="inline-flex items-center gap-2 font-mono text-xs px-3 py-1.5 rounded-full border mb-8"
-            style={{ borderColor: "var(--accent)", color: "var(--accent)", background: "var(--accent-dim)" }}
-          >
-            <span className="w-1.5 h-1.5 rounded-full inline-block" style={{ background: "var(--accent)" }} />
-            Jetzt live
-          </div>
-
           <h1 className="text-5xl md:text-7xl lg:text-8xl font-extrabold leading-[0.95] tracking-tight mb-8">
-            Der Bitcoin-Kompass
+            Die beste Bitcoin-Börse finden.
             <br />
-            <span style={{ color: "var(--accent)" }}>für den DACH-Raum.</span>
+            <span style={{ color: "var(--accent)" }}>Die sicherste Wallet wählen.</span>
           </h1>
 
           <p
@@ -232,30 +220,6 @@ export default function Home() {
           </div>
         </section>
 
-        {/* ── NEWSLETTER ── */}
-        <section
-          className="mx-6 md:mx-12 my-16 rounded-2xl p-10 md:p-16 border"
-          style={{ background: "var(--surface)", borderColor: "var(--border)" }}
-        >
-          <div
-            className="w-12 h-12 rounded-lg flex items-center justify-center text-xl font-bold mb-6"
-            style={{ background: "var(--accent)", color: "#0a0a0a" }}
-          >
-            ₿
-          </div>
-          <h2 className="text-3xl md:text-4xl font-bold mb-4">
-            Immer auf dem aktuellen Stand.
-          </h2>
-          <p className="mb-8 text-lg leading-relaxed" style={{ color: "var(--text-secondary)" }}>
-            Gebühren ändern sich, neue Anbieter kommen, Aktionen laufen ab.
-            Trag dich ein und wir benachrichtigen dich bei relevanten Änderungen –
-            kein Spam, nur was wirklich wichtig ist.
-          </p>
-          <EmailCapture source="newsletter" size="large" />
-          <p className="mt-4 font-mono text-xs" style={{ color: "var(--text-secondary)" }}>
-            Keine Werbung. Kein Tracking. Abmeldung jederzeit möglich.
-          </p>
-        </section>
       </main>
 
       {/* ── FOOTER ── */}
@@ -277,21 +241,15 @@ export default function Home() {
             Das unabhängige Bitcoin-Vergleichsportal für Deutschland, Österreich & die Schweiz.
           </p>
           <div className="flex flex-wrap items-center gap-4 mb-4">
-            <Link href="/vergleich/boersen" className="font-mono text-xs transition-colors hover:text-white" style={{ color: "var(--text-secondary)" }}>
-              Börsen
-            </Link>
+            <Link href="/vergleich/boersen" className="font-mono text-xs transition-colors hover:text-white" style={{ color: "var(--text-secondary)" }}>Börsen</Link>
             <span style={{ color: "var(--border)" }}>|</span>
-            <Link href="/vergleich/hardware-wallets" className="font-mono text-xs transition-colors hover:text-white" style={{ color: "var(--text-secondary)" }}>
-              Hardware Wallets
-            </Link>
+            <Link href="/vergleich/hardware-wallets" className="font-mono text-xs transition-colors hover:text-white" style={{ color: "var(--text-secondary)" }}>Hardware Wallets</Link>
             <span style={{ color: "var(--border)" }}>|</span>
-            <Link href="/impressum" className="font-mono text-xs transition-colors hover:text-white" style={{ color: "var(--text-secondary)" }}>
-              Impressum
-            </Link>
+            <Link href="/ratgeber" className="font-mono text-xs transition-colors hover:text-white" style={{ color: "var(--text-secondary)" }}>Ratgeber</Link>
             <span style={{ color: "var(--border)" }}>|</span>
-            <Link href="/datenschutz" className="font-mono text-xs transition-colors hover:text-white" style={{ color: "var(--text-secondary)" }}>
-              Datenschutz
-            </Link>
+            <Link href="/impressum" className="font-mono text-xs transition-colors hover:text-white" style={{ color: "var(--text-secondary)" }}>Impressum</Link>
+            <span style={{ color: "var(--border)" }}>|</span>
+            <Link href="/datenschutz" className="font-mono text-xs transition-colors hover:text-white" style={{ color: "var(--text-secondary)" }}>Datenschutz</Link>
           </div>
           <p className="font-mono text-xs mb-1" style={{ color: "var(--text-secondary)" }}>
             Affiliate-Links werden transparent gekennzeichnet.

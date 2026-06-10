@@ -16,7 +16,7 @@ const dmMono = DM_Mono({
 
 export const metadata: Metadata = {
   title: {
-    default: "Bitcoin Navigator – Der Bitcoin-Kompass für den DACH-Raum",
+    default: "Bitcoin Navigator – Die beste Bitcoin-Börse finden. Die sicherste Wallet wählen.",
     template: "%s | Bitcoin Navigator",
   },
   description:
