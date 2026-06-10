@@ -94,9 +94,9 @@ export default function Home() {
         {/* ── HERO ── */}
         <section className="px-6 md:px-12 pt-24 pb-20 max-w-5xl">
           <h1 className="text-5xl md:text-7xl lg:text-8xl font-extrabold leading-[0.95] tracking-tight mb-8">
-            Die beste Bitcoin-Börse finden.
+            Finde die besten Produkte
             <br />
-            <span style={{ color: "var(--accent)" }}>Die sicherste Wallet wählen.</span>
+            <span style={{ color: "var(--accent)" }}>für deine Bitcoin.</span>
           </h1>
 
           <p
@@ -121,6 +121,13 @@ export default function Home() {
               style={{ borderColor: "var(--border)", color: "var(--text-primary)", background: "var(--surface)" }}
             >
               Hardware Wallets →
+            </Link>
+            <Link
+              href="/ratgeber"
+              className="px-7 py-4 rounded-xl font-bold text-sm border transition-all hover:border-orange-500"
+              style={{ borderColor: "var(--border)", color: "var(--text-primary)", background: "var(--surface)" }}
+            >
+              Ratgeber →
             </Link>
           </div>
         </section>
