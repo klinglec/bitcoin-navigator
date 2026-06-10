@@ -3,6 +3,10 @@ import ComparisonView from '@/components/comparison/ComparisonView'
 import Link from 'next/link'
 import { notFound } from 'next/navigation'
 
+// ISR: Seite alle 3600 Sekunden (1h) neu generieren
+// → Datenbankänderungen gehen automatisch live, kein manueller Redeploy nötig
+export const revalidate = 3600
+
 const VALID_CATEGORIES = ['boersen', 'hardware-wallets']
 
 export async function generateStaticParams() {

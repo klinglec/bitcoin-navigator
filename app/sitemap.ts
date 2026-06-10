@@ -1,6 +1,8 @@
 import { MetadataRoute } from 'next'
 import { createClient } from '@supabase/supabase-js'
 
+export const revalidate = 3600
+
 const BASE = 'https://bitcoinnavigator.de'
 
 async function getProviderSlugs(): Promise<{ slug: string; updated_at: string }[]> {

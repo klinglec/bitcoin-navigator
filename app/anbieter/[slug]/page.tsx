@@ -4,6 +4,9 @@ import { notFound } from 'next/navigation'
 import type { Criteria, CriteriaValue } from '@/lib/types'
 import PromoCodeButton from '@/components/PromoCodeButton'
 
+// ISR: Detailseiten alle 3600 Sekunden (1h) neu generieren
+export const revalidate = 3600
+
 export async function generateStaticParams() {
   const slugs = await getAllProviderSlugs()
   return slugs.map(slug => ({ slug }))
