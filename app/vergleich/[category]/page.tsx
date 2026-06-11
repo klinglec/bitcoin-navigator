@@ -19,7 +19,7 @@ export async function generateMetadata({ params }: { params: Promise<{ category:
   const meta: Record<string, { title: string; description: string }> = {
     'boersen': {
       title: 'Bitcoin Börsen Vergleich 2026 – Gebühren, Sparplan & Sicherheit | Bitcoin Navigator',
-      description: 'Vergleiche 9 Bitcoin-Börsen für den DACH-Raum: Maker-/Taker-Gebühren, KYC-Level, Sparplan, Lightning-Support & Regulierung. Unabhängig & aktuell.',
+      description: 'Vergleiche 4 Bitcoin-first Börsen für den DACH-Raum: Gebühren, Sparplan, Lightning-Support & Regulierung. Unabhängig, täglich geprüft.',
     },
     'hardware-wallets': {
       title: 'Hardware Wallet Vergleich 2026 – Ledger, Trezor, BitBox & mehr | Bitcoin Navigator',

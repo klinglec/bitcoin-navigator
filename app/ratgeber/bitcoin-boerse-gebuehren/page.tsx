@@ -64,29 +64,31 @@ export default function ArtikelBoerseGebuehren() {
             <p className="leading-relaxed mb-4">
               Beim <strong style={{ color: "var(--text-primary)" }}>Spread-Modell</strong> kaufst du Bitcoin zu einem Preis,
               der leicht über dem Marktpreis liegt – und verkaufst zu einem Preis leicht darunter. Die Differenz
-              (der Spread) ist die Gebühr. Typische Werte liegen zwischen 1,0% und 1,99%. Anbieter wie Bitpanda
-              (Standard), Bison oder Relai arbeiten so.
+              (der Spread) ist die Gebühr. Typische Werte liegen zwischen 1,0% und 1,99%. Anbieter wie Bitpanda (Standard) oder Bison arbeiten so – sie sind deshalb nicht im Vergleich auf Bitcoin Navigator gelistet.
             </p>
             <p className="leading-relaxed mb-4">
               Beim <strong style={{ color: "var(--text-primary)" }}>Maker/Taker-Modell</strong> handelst du direkt über
               ein Orderbuch. Wer eine Order einstellt (Maker), zahlt weniger – wer eine bestehende Order kauft (Taker),
-              etwas mehr. Typische Basisgebühren liegen zwischen 0,15% und 0,60%. Kraken, Bitvavo und Coinbase
-              Advanced arbeiten so.
+              etwas mehr. Typische Basisgebühren liegen zwischen 0,15% und 0,60%. Bitcoin.de arbeitet so.
             </p>
             <div className="rounded-xl p-5 border" style={{ background: "var(--surface)", borderColor: "var(--border)" }}>
               <p className="font-mono text-xs mb-3" style={{ color: "var(--accent)" }}>Beispiel: 200€ Bitcoin kaufen</p>
               <div className="space-y-2 text-sm">
                 <div className="flex justify-between">
-                  <span>Bison (Spread ~1,25%)</span>
-                  <span style={{ color: "var(--text-primary)" }}>≈ 2,50€ Gebühr</span>
+                  <span>21bitcoin (Sparplan 0,99%)</span>
+                  <span style={{ color: "var(--text-primary)" }}>≈ 1,98€ Gebühr</span>
                 </div>
                 <div className="flex justify-between">
-                  <span>Bitvavo (Taker 0,25%)</span>
-                  <span style={{ color: "var(--text-primary)" }}>≈ 0,50€ Gebühr</span>
+                  <span>Relai (Flat-Fee 1,0%)</span>
+                  <span style={{ color: "var(--text-primary)" }}>≈ 2,00€ Gebühr</span>
                 </div>
                 <div className="flex justify-between">
-                  <span>Coinbase (Taker 0,60%)</span>
-                  <span style={{ color: "var(--text-primary)" }}>≈ 1,20€ Gebühr</span>
+                  <span>Bitcoin.de (Taker 0,5%)</span>
+                  <span style={{ color: "var(--text-primary)" }}>≈ 1,00€ Gebühr</span>
+                </div>
+                <div className="flex justify-between">
+                  <span>Coinfinity (Flat-Fee 1,5%, kein Spread)</span>
+                  <span style={{ color: "var(--text-primary)" }}>≈ 3,00€ Gebühr</span>
                 </div>
               </div>
             </div>
@@ -103,28 +105,24 @@ export default function ArtikelBoerseGebuehren() {
               <p className="font-mono text-xs mb-3" style={{ color: "var(--accent)" }}>Gesamtgebühren über 5 Jahre</p>
               <div className="space-y-2 text-sm">
                 <div className="flex justify-between items-center">
-                  <span>Bitvavo (0,25% Taker)</span>
-                  <span className="font-bold" style={{ color: "#22c55e" }}>30€</span>
+                  <span>21bitcoin (0,99% Sparplan)</span>
+                  <span className="font-bold" style={{ color: "#2a6a2a" }}>118,80€</span>
+                </div>
+                <div className="flex justify-between items-center">
+                  <span>Bitcoin.de (0,5% Taker)</span>
+                  <span style={{ color: "var(--text-primary)" }}>60€</span>
                 </div>
                 <div className="flex justify-between items-center">
                   <span>Relai (1,0% Flat-Fee)</span>
                   <span style={{ color: "var(--text-primary)" }}>120€</span>
                 </div>
                 <div className="flex justify-between items-center">
-                  <span>Bitpanda Standard (~1,5% Spread)</span>
-                  <span style={{ color: "var(--text-primary)" }}>180€</span>
-                </div>
-                <div className="flex justify-between items-center">
-                  <span>Bison (~1,25% Spread)</span>
-                  <span style={{ color: "var(--text-primary)" }}>150€</span>
-                </div>
-                <div className="flex justify-between items-center">
-                  <span>Coinfinity (1,5% Flat-Fee)</span>
+                  <span>Coinfinity (1,5% Flat-Fee, kein Spread)</span>
                   <span style={{ color: "var(--text-primary)" }}>180€</span>
                 </div>
               </div>
               <p className="text-xs pt-2 border-t" style={{ borderColor: "var(--border)", color: "var(--text-secondary)" }}>
-                * Vereinfachte Rechnung ohne Preisveränderungen. Tatsächliche Gebühren können variieren.
+                * Vereinfachte Rechnung: 200€/Monat × 60 Monate × Gebührensatz. Tatsächliche Gebühren können variieren.
               </p>
             </div>
             <p className="leading-relaxed mt-4">
@@ -177,7 +175,7 @@ export default function ArtikelBoerseGebuehren() {
 
           <div className="rounded-2xl p-7 border mt-8" style={{ background: "var(--surface)", borderColor: "var(--accent)" }}>
             <p className="font-mono text-xs mb-3" style={{ color: "var(--accent)" }}>Jetzt vergleichen</p>
-            <p className="font-bold text-lg mb-4">9 Bitcoin-Börsen im direkten Vergleich</p>
+            <p className="font-bold text-lg mb-4">4 Bitcoin-first Börsen im direkten Vergleich</p>
             <p className="text-sm mb-5" style={{ color: "var(--text-secondary)" }}>
               Gebühren, Sparplan, Lightning, KYC-Level, Regulierung und mehr – alle Daten aktuell und transparent.
             </p>

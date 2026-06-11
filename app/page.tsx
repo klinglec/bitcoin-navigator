@@ -6,7 +6,7 @@ const categories: CategoryData[] = [
   {
     iconKey: "exchanges",
     title: "Börsen & Exchanges",
-    desc: "Gebühren, Sparplan, Lightning & KYC-Level – 9 Anbieter im direkten Vergleich.",
+    desc: "Gebühren, Sparplan, Lightning & KYC-Level – 4 Anbieter im direkten Vergleich.",
     href: "/vergleich/boersen",
   },
   {
@@ -56,7 +56,7 @@ const features = [
 ];
 
 const stats = [
-  { value: "9", label: "Börsen verglichen" },
+  { value: "4", label: "Börsen verglichen" },
   { value: "12", label: "Hardware Wallets" },
   { value: "21", label: "Kriterien je Kategorie" },
   { value: "täglich", label: "Daten geprüft" },

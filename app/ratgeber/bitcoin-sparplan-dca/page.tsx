@@ -92,11 +92,9 @@ export default function ArtikelSparplan() {
             </p>
             <div className="space-y-3">
               {[
-                { name: "21bitcoin", fee: "0,99%", min: "21€", note: "Günstigster Sparplan, Bitcoin-only, FMA-reguliert" },
-                { name: "Relai", fee: "1,0%", min: "10€", note: "Bitcoin-only, FINMA, einfache App" },
-                { name: "Bitvavo", fee: "0,25%", min: "10€", note: "Günstigster Taker-Tarif, MiCA-reguliert" },
-                { name: "Coinfinity", fee: "1,5%", min: "21€", note: "Österreich, FMA MiCAR, Lightning" },
-                { name: "Kraken", fee: "1,0%*", min: "10€", note: "Recurring Buys, MiCA, Lightning" },
+                { name: "21bitcoin", fee: "0,99%", min: "21€", note: "Günstigster Sparplan, Bitcoin-only, FMA MiCAR" },
+                { name: "Relai", fee: "1,0%", min: "50€", note: "Bitcoin-only, FINMA, einfache App" },
+                { name: "Coinfinity", fee: "1,5%", min: "21€", note: "Bitcoin-only, FMA MiCAR, Lightning, kein Spread" },
               ].map((p) => (
                 <div key={p.name} className="flex items-start justify-between gap-4 p-4 rounded-xl border text-sm"
                   style={{ background: "var(--surface)", borderColor: "var(--border)" }}>
@@ -111,9 +109,6 @@ export default function ArtikelSparplan() {
                 </div>
               ))}
             </div>
-            <p className="text-xs mt-3" style={{ color: "var(--text-secondary)" }}>
-              * Kraken Recurring Buys: 1% Gebühr, unabhängig vom normalen Maker/Taker-Tarif.
-            </p>
           </section>
 
           <section>
