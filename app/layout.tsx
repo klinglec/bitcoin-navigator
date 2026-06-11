@@ -23,8 +23,7 @@ export const metadata: Metadata = {
     "Börsen, Wallets, Steuerberater & mehr – unabhängig verglichen, von der Community bewertet. Das erste community-kuratierte Bitcoin-Vergleichsportal für Deutschland, Österreich & Schweiz.",
   keywords: [
     "Bitcoin kaufen", "Bitcoin Börse Vergleich", "Hardware Wallet Vergleich",
-    "Bitcoin Sparplan", "Bitcoin DACH", "Krypto Vergleich Deutschland",
-    "Bitcoin Österreich", "Bitcoin Schweiz", "Ledger Trezor BitBox",
+    "Bitcoin Sparplan", "Bitcoin DACH", "Bitcoin Österreich", "Bitcoin Schweiz", "Ledger Trezor BitBox",
   ],
   authors: [{ name: "Bitcoin Navigator" }],
   creator: "Bitcoin Navigator",

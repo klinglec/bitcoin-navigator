@@ -50,7 +50,13 @@ export default function AccountPage() {
         return
       }
 
-      setEmail(user.email ?? null)
+      // Nostr-Nutzer: npub aus localStorage anzeigen statt interner Phantom-Email
+      const npub = localStorage.getItem('bn_nostr_npub')
+      if (npub || user.email?.includes('@internal.bitcoinnavigator.de')) {
+        setEmail(npub ?? '⚡ Nostr-Konto')
+      } else {
+        setEmail(user.email ?? null)
+      }
 
       const { data } = await supabase
         .from('user_reviews')
@@ -108,7 +114,7 @@ export default function AccountPage() {
         <div className="flex gap-3 mb-12">
           <button
             onClick={logout}
-            className="px-5 py-2.5 rounded-xl text-sm border font-medium transition-all hover:border-orange-500"
+            className="px-5 py-2.5 rounded-xl text-sm border font-medium transition-all hover:opacity-70"
             style={{ background: 'var(--surface)', borderColor: 'var(--border)', color: 'var(--text-secondary)' }}>
             Abmelden
           </button>
@@ -128,7 +134,7 @@ export default function AccountPage() {
                 Du hast noch keine Reviews geschrieben.
               </p>
               <Link href="/vergleich/boersen"
-                className="text-sm font-medium transition-colors hover:text-white"
+                className="text-sm font-medium transition-colors hover:opacity-70"
                 style={{ color: 'var(--accent)' }}>
                 Jetzt Börsen bewerten →
               </Link>
@@ -183,7 +189,7 @@ export default function AccountPage() {
         {/* DSGVO-Hinweis */}
         <p className="mt-12 text-xs font-mono" style={{ color: 'var(--border)' }}>
           Gemäß DSGVO kannst du alle deine Daten löschen. Schreibe dazu an{' '}
-          <a href="mailto:christian-klingler@gmx.net" className="hover:text-white transition-colors"
+          <a href="mailto:christian-klingler@gmx.net" className="hover:opacity-70 transition-colors"
             style={{ color: 'var(--text-secondary)' }}>
             christian-klingler@gmx.net
           </a>.

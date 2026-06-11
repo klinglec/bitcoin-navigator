@@ -102,18 +102,44 @@ function ProviderCard({ provider, metricCriteria, boolCriteria, promoCodeCriteri
 
         {/* ── Metrics ── */}
         <div className="flex flex-wrap items-center gap-x-6 gap-y-3 px-5 py-4">
-          {metricCriteria.map(c => {
-            const cv = provider.values[c.slug]
-            if (!cv) return null
-            return (
-              <div key={c.slug}>
-                <p className="text-xs mb-0.5" style={{ color: 'var(--text-secondary)' }}>{c.name}</p>
-                <p className="font-bold text-base" style={{ color: 'var(--text-primary)', letterSpacing: '-0.02em' }}>
-                  {formatMetricValue(cv, c)}
-                </p>
-              </div>
-            )
-          })}
+          {(() => {
+            const pricingModel = provider.values['pricing_model']?.value_text
+            const makerFee = provider.values['maker_fee']?.value_number
+            const takerFee = provider.values['taker_fee']?.value_number
+
+            // Nur relevante Metriken je Preismodell anzeigen
+            const filtered = metricCriteria.filter(c => {
+              if (pricingModel === 'Flat-Fee') {
+                // Gleiche Maker/Taker: nur einen Wert zeigen (z.B. Relai, Coinfinity)
+                if (makerFee === takerFee) return c.slug === 'maker_fee'
+                // Unterschiedlich (21bitcoin: Sparplan vs Sofortkauf): Maker + Taker
+                return ['maker_fee', 'taker_fee'].includes(c.slug)
+              }
+              if (pricingModel === 'Spread') return c.slug === 'spread_pct'
+              if (pricingModel === 'Maker/Taker') return ['maker_fee', 'taker_fee'].includes(c.slug)
+              return true
+            })
+
+            return filtered.map(c => {
+              const cv = provider.values[c.slug]
+              if (!cv) return null
+              // Label anpassen: Flat-Fee Einzel → "Flat-Fee", 21bitcoin Maker → "Sparplan", Taker → "Sofortkauf"
+              let label = c.name
+              if (pricingModel === 'Flat-Fee' && makerFee === takerFee) label = 'Flat-Fee'
+              if (pricingModel === 'Flat-Fee' && makerFee !== takerFee) {
+                if (c.slug === 'maker_fee') label = 'Sparplan'
+                if (c.slug === 'taker_fee') label = 'Sofortkauf'
+              }
+              return (
+                <div key={c.slug}>
+                  <p className="text-xs mb-0.5" style={{ color: 'var(--text-secondary)' }}>{label}</p>
+                  <p className="font-bold text-base" style={{ color: 'var(--text-primary)', letterSpacing: '-0.02em' }}>
+                    {formatMetricValue(cv, c)}
+                  </p>
+                </div>
+              )
+            })
+          })()}
           {promoCode && (
             <div>
               <p className="text-xs mb-0.5" style={{ color: 'var(--text-secondary)' }}>Promo-Code</p>

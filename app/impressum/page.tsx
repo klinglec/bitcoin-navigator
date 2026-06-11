@@ -10,7 +10,7 @@ export default function Impressum() {
     <div className="min-h-screen px-6 md:px-12 py-16 max-w-2xl">
       <Link
         href="/"
-        className="font-mono text-xs mb-12 block hover:text-white transition-colors"
+        className="font-mono text-xs mb-12 block hover:opacity-70 transition-colors"
         style={{ color: "var(--text-secondary)" }}
       >
         ← Zurück
@@ -38,7 +38,7 @@ export default function Impressum() {
             E-Mail:{" "}
             <a
               href="mailto:christian-klingler@gmx.net"
-              className="hover:text-white transition-colors"
+              className="hover:opacity-70 transition-colors"
               style={{ color: "var(--text-primary)" }}
             >
               christian-klingler@gmx.net

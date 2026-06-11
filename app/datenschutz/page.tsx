@@ -8,7 +8,7 @@ export const metadata = {
 export default function Datenschutz() {
   return (
     <div className="min-h-screen px-6 md:px-12 py-16 max-w-2xl">
-      <Link href="/" className="font-mono text-xs mb-12 block hover:text-white transition-colors"
+      <Link href="/" className="font-mono text-xs mb-12 block hover:opacity-70 transition-colors"
         style={{ color: "var(--text-secondary)" }}>
         ← Zurück
       </Link>
@@ -32,7 +32,7 @@ export default function Datenschutz() {
             Deutschland<br /><br />
             E-Mail:{" "}
             <a href="mailto:christian-klingler@gmx.net"
-              className="hover:text-white transition-colors"
+              className="hover:opacity-70 transition-colors"
               style={{ color: "var(--text-primary)" }}>
               christian-klingler@gmx.net
             </a>
@@ -49,8 +49,9 @@ export default function Datenschutz() {
             Wir erheben nur Daten, die du uns aktiv mitteilst:
           </p>
           <ul className="text-sm space-y-2 ml-4">
-            <li><strong style={{ color: "var(--text-primary)" }}>E-Mail-Adresse</strong> – wenn du dich über das Launch-Formular einträgst, um über den Start informiert zu werden.</li>
-            <li><strong style={{ color: "var(--text-primary)" }}>Keine weiteren personenbezogenen Daten</strong> – kein Name, keine IP-Adresse im Klartext, kein Tracking.</li>
+            <li><strong style={{ color: "var(--text-primary)" }}>E-Mail-Adresse</strong> – wenn du dich registrierst oder eine Bewertung abgibst.</li>
+            <li><strong style={{ color: "var(--text-primary)" }}>IP-Adresse (gehasht)</strong> – für Spam-Schutz bei Reviews. Kein Klartext, nur SHA-256-Hash.</li>
+            <li><strong style={{ color: "var(--text-primary)" }}>Nostr-Pubkey</strong> – wenn du dich per Nostr anmeldest.</li>
           </ul>
           <p className="leading-relaxed text-sm mt-3">
             Technisch bedingt verarbeitet unser Hosting-Anbieter Vercel beim Seitenaufruf
@@ -101,7 +102,7 @@ export default function Datenschutz() {
               <strong style={{ color: "var(--text-primary)" }}>Vercel Inc.</strong> (San Francisco, USA) –
               Hosting der Website. Vercel ist nach dem EU-US Data Privacy Framework zertifiziert.{" "}
               <a href="https://vercel.com/legal/privacy-policy" target="_blank" rel="noopener noreferrer"
-                className="hover:text-white transition-colors" style={{ color: "var(--accent)" }}>
+                className="hover:opacity-70 transition-colors" style={{ color: "var(--accent)" }}>
                 Datenschutzerklärung Vercel ↗
               </a>
             </li>
@@ -109,7 +110,7 @@ export default function Datenschutz() {
               <strong style={{ color: "var(--text-primary)" }}>Supabase Inc.</strong> (San Francisco, USA) –
               Datenbank für E-Mail-Adressen der Warteliste. Supabase bietet EU-Datenhaltung in Frankfurt (AWS eu-central-1) an.{" "}
               <a href="https://supabase.com/privacy" target="_blank" rel="noopener noreferrer"
-                className="hover:text-white transition-colors" style={{ color: "var(--accent)" }}>
+                className="hover:opacity-70 transition-colors" style={{ color: "var(--accent)" }}>
                 Datenschutzerklärung Supabase ↗
               </a>
             </li>
@@ -141,7 +142,7 @@ export default function Datenschutz() {
             eine Provision. Für dich entstehen dadurch keine Mehrkosten. Affiliate-Links sind
             auf dieser Website stets transparent mit dem Hinweis{" "}
             <span className="font-mono text-xs px-1.5 py-0.5 rounded"
-              style={{ background: "var(--accent-dim)", color: "var(--accent)", border: "1px solid var(--accent)" }}>
+              style={{ background: "rgba(247,147,26,0.10)", color: "#F7931A", border: "1px solid rgba(247,147,26,0.3)" }}>
               Affiliate
             </span>{" "}
             oder durch <code>rel="sponsored"</code> im Quellcode gekennzeichnet.
@@ -172,7 +173,7 @@ export default function Datenschutz() {
           <p className="leading-relaxed text-sm mt-3">
             Wende dich dazu einfach per E-Mail an{" "}
             <a href="mailto:christian-klingler@gmx.net"
-              className="hover:text-white transition-colors"
+              className="hover:opacity-70 transition-colors"
               style={{ color: "var(--text-primary)" }}>
               christian-klingler@gmx.net
             </a>.
@@ -189,7 +190,7 @@ export default function Datenschutz() {
             Du hast das Recht, dich bei einer Datenschutz-Aufsichtsbehörde zu beschweren.
             Zuständig für Baden-Württemberg ist der{" "}
             <a href="https://www.baden-wuerttemberg.datenschutz.de" target="_blank"
-              rel="noopener noreferrer" className="hover:text-white transition-colors"
+              rel="noopener noreferrer" className="hover:opacity-70 transition-colors"
               style={{ color: "var(--accent)" }}>
               Landesbeauftragte für Datenschutz und Informationsfreiheit Baden-Württemberg ↗
             </a>.
