@@ -26,25 +26,25 @@ export default function ReviewSection({ providerId, categoryId, providerName }: 
   }, [])
 
   return (
-    <section className="mt-12 pt-8 border-t" style={{ borderColor: 'var(--border)' }}>
+    <section className="mt-12 pt-8 border-t" style={{ borderColor: '#e0ddd8' }}>
       <div className="flex items-center justify-between flex-wrap gap-4 mb-6">
         <h2 className="text-xl font-bold flex items-center gap-2">
-          <span style={{ color: 'var(--accent)' }}>◈</span> Nutzererfahrungen
+          Einschätzungen & Erfahrungen
         </h2>
 
         {loaded && (
           user ? (
             <button
               onClick={() => setShowForm(v => !v)}
-              className="px-5 py-2 rounded-xl text-sm font-bold border transition-all hover:border-orange-500"
-              style={{ background: 'var(--surface)', borderColor: 'var(--border)', color: 'var(--text-primary)' }}
+              className="px-5 py-2 rounded-xl text-sm font-bold border transition-all hover:opacity-70"
+              style={{ background: '#ffffff', borderColor: '#e0ddd8', color: '#1a1a1a' }}
             >
               {showForm ? 'Abbrechen' : '+ Review schreiben'}
             </button>
           ) : (
             <Link href="/account/login"
-              className="px-5 py-2 rounded-xl text-sm font-bold border transition-all hover:border-orange-500"
-              style={{ background: 'var(--surface)', borderColor: 'var(--border)', color: 'var(--text-primary)' }}>
+              className="px-5 py-2 rounded-xl text-sm font-bold border transition-all hover:opacity-70"
+              style={{ background: '#ffffff', borderColor: '#e0ddd8', color: '#1a1a1a' }}>
               Anmelden zum Bewerten
             </Link>
           )

@@ -60,7 +60,7 @@ export default function RootLayout({
 }) {
   return (
     <html lang="de" className={`${syne.variable} ${dmMono.variable}`}>
-      <body className="bg-[#0a0a0a] text-white antialiased">{children}</body>
+      <body className="antialiased" style={{ background: '#f7f6f3', color: '#1a1a1a' }}>{children}</body>
     </html>
   );
 }

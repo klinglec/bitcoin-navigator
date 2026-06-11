@@ -92,12 +92,12 @@ export default async function ProviderPage({ params }: { params: Promise<{ slug:
           <div className="flex flex-wrap items-start justify-between gap-6">
             <div>
               <div className="flex items-center gap-3 mb-2">
-                <p className="font-mono text-xs tracking-widest uppercase" style={{ color: 'var(--accent)' }}>
+                <p className="font-mono text-xs tracking-widest uppercase" style={{ color: 'var(--text-tertiary)', letterSpacing: '0.08em' }}>
                   Anbieter-Profil
                 </p>
                 {provider.is_verified && (
                   <span className="font-mono text-xs px-2 py-0.5 rounded-full border"
-                    style={{ borderColor: 'var(--accent)', color: 'var(--accent)', background: 'var(--accent-dim)' }}>
+                    style={{ borderColor: 'var(--border-strong)', color: 'var(--text-secondary)', background: 'var(--surface-alt)' }}>
                     ✓ Verifiziert
                   </span>
                 )}
@@ -106,7 +106,7 @@ export default async function ProviderPage({ params }: { params: Promise<{ slug:
               <div className="flex flex-wrap gap-2 mb-4">
                 {provider.categories.map(cat => (
                   <Link key={cat.slug} href={categoryBackLinks[cat.slug] ?? '#'}
-                    className="text-xs px-3 py-1 rounded-full border transition-colors hover:border-orange-500"
+                    className="text-xs px-3 py-1 rounded-full border transition-colors hover:border-gray-400"
                     style={{ borderColor: 'var(--border)', color: 'var(--text-secondary)' }}>
                     {cat.name}
                   </Link>
@@ -127,7 +127,7 @@ export default async function ProviderPage({ params }: { params: Promise<{ slug:
             </div>
             <a href={provider.website_url} target="_blank" rel="noopener noreferrer sponsored"
               className="flex-shrink-0 px-6 py-3 rounded-lg font-bold text-sm transition-all hover:opacity-90"
-              style={{ background: 'var(--accent)', color: '#0a0a0a' }}>
+              style={{ background: 'var(--cta-bg)', color: 'var(--cta-text)' }}>
               Zur Website →
             </a>
           </div>
@@ -138,7 +138,7 @@ export default async function ProviderPage({ params }: { params: Promise<{ slug:
           <section key={group.category.slug} className="mb-10">
             <h2 className="text-lg font-bold mb-4 pb-3 border-b flex items-center gap-2"
               style={{ borderColor: 'var(--border)' }}>
-              <span style={{ color: 'var(--accent)' }}>◈</span>
+              <span style={{ color: 'var(--text-tertiary)' }}>◈</span>
               {group.category.name}
             </h2>
 
@@ -190,7 +190,7 @@ export default async function ProviderPage({ params }: { params: Promise<{ slug:
           {provider.categories.map(cat => (
             categoryBackLinks[cat.slug] && (
               <Link key={cat.slug} href={categoryBackLinks[cat.slug]}
-                className="px-5 py-2.5 rounded-lg border text-sm font-medium transition-all hover:border-orange-500"
+                className="px-5 py-2.5 rounded-lg border text-sm font-medium transition-all hover:border-gray-400"
                 style={{ background: 'var(--surface)', borderColor: 'var(--border)', color: 'var(--text-primary)' }}>
                 ← Zurück zum {cat.name} Vergleich
               </Link>
@@ -199,7 +199,7 @@ export default async function ProviderPage({ params }: { params: Promise<{ slug:
         </div>
 
         {/* ── Disclaimer ── */}
-        <p className="mt-8 text-xs font-mono" style={{ color: 'var(--border)' }}>
+        <p className="mt-8 text-xs font-mono" style={{ color: 'var(--text-tertiary)' }}>
           Alle Angaben ohne Gewähr. Letzte Aktualisierung der Daten durch das Bitcoin Navigator Team.
           Links zur Anbieter-Website können Affiliate-Links sein und sind entsprechend gekennzeichnet.
         </p>
@@ -210,8 +210,8 @@ export default async function ProviderPage({ params }: { params: Promise<{ slug:
         <div className="flex flex-wrap gap-4 items-center justify-between">
           <span>© 2026 Bitcoin Navigator</span>
           <div className="flex gap-4">
-            <Link href="/impressum" className="hover:text-white transition-colors">Impressum</Link>
-            <Link href="/datenschutz" className="hover:text-white transition-colors">Datenschutz</Link>
+            <Link href="/impressum" className="hover:opacity-70 transition-colors">Impressum</Link>
+            <Link href="/datenschutz" className="hover:opacity-70 transition-colors">Datenschutz</Link>
           </div>
         </div>
       </footer>

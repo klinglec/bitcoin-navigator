@@ -46,7 +46,7 @@ export async function getComparisonData(categorySlug: string): Promise<Compariso
 
   if (provError) throw provError
 
-  const providers: Provider[] = (rows ?? []).map((row) => {
+  const providers: Provider[] = (rows ?? []).filter(row => row.providers !== null).map((row) => {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const p = (row.providers as any) as {
       id: string; slug: string; name: string; logo_url: string | null

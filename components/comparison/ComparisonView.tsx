@@ -15,100 +15,157 @@ interface SortState {
   dir: 'asc' | 'desc'
 }
 
-// ─── Value renderer ───────────────────────────────────────────────────────────
-function CellValue({ cv, criteria }: { cv: CriteriaValue | undefined; criteria: Criteria }) {
-  if (!cv) return <span style={{ color: 'var(--border)' }}>–</span>
-
-  if (criteria.data_type === 'boolean') {
-    if (cv.value_boolean === null) return <span style={{ color: 'var(--border)' }}>–</span>
-    return cv.value_boolean
-      ? <span className="font-bold" style={{ color: '#22c55e' }}>✓</span>
-      : <span style={{ color: 'var(--text-secondary)' }}>✗</span>
-  }
-
-  if (criteria.data_type === 'percentage' || criteria.data_type === 'number') {
-    if (cv.value_number === null) {
-      // Für Maker/Taker: Hinweis wenn Spread-Modell verwendet wird
-      if (criteria.slug === 'maker_fee' || criteria.slug === 'taker_fee') {
-        return <span className="text-xs italic" style={{ color: 'var(--text-secondary)' }}>Spread</span>
-      }
-      return <span style={{ color: 'var(--border)' }}>–</span>
-    }
-    const formatted = criteria.data_type === 'percentage'
-      ? `${cv.value_number.toFixed(2).replace('.', ',')} %`
-      : criteria.unit
-        ? `${cv.value_number.toLocaleString('de-DE')} ${criteria.unit}`
-        : cv.value_number.toLocaleString('de-DE')
-    return <span>{formatted}</span>
-  }
-
-  if (criteria.data_type === 'select') {
-    return <span>{cv.value_text ?? '–'}</span>
-  }
-
-  // Promo-Code: kopierbar darstellen
-  if (criteria.slug === 'promo_code' && cv.value_text) {
-    return (
-      <button
-        onClick={() => navigator.clipboard.writeText(cv.value_text!)}
-        title="Code kopieren"
-        className="font-mono text-xs px-2 py-1 rounded border transition-all hover:opacity-80 active:scale-95"
-        style={{
-          background: 'var(--accent-dim)',
-          borderColor: 'var(--accent)',
-          color: 'var(--accent)',
-          letterSpacing: '0.1em',
-        }}
-      >
-        {cv.value_text} ⎘
-      </button>
-    )
-  }
-
-  if (criteria.data_type === 'multi_select') {
-    const vals: string[] = Array.isArray(cv.value_json) ? cv.value_json as string[] : []
-    if (!vals.length) return <span style={{ color: 'var(--border)' }}>–</span>
-    return (
-      <div className="flex flex-wrap gap-1">
-        {vals.map(v => (
-          <span
-            key={v}
-            className="px-1.5 py-0.5 rounded text-xs"
-            style={{ background: 'var(--accent-dim)', color: 'var(--accent)', border: '1px solid var(--accent)' }}
-          >
-            {v}
-          </span>
-        ))}
-      </div>
-    )
-  }
-
-  return <span>{cv.value_text ?? '–'}</span>
+const COUNTRY_FLAGS: Record<string, string> = {
+  DE: '🇩🇪', AT: '🇦🇹', CH: '🇨🇭', US: '🇺🇸',
+  NL: '🇳🇱', CA: '🇨🇦', FR: '🇫🇷', CZ: '🇨🇿', GB: '🇬🇧',
 }
 
-// ─── Sort helpers ─────────────────────────────────────────────────────────────
 function getSortValue(provider: Provider, slug: string): number | string {
   const cv = provider.values[slug]
-  if (!cv) return -Infinity
+  if (!cv) return Infinity
   if (cv.value_number !== null) return cv.value_number
-  if (cv.value_boolean !== null) return cv.value_boolean ? 1 : 0
+  if (cv.value_boolean !== null) return cv.value_boolean ? 0 : 1
   return cv.value_text ?? ''
 }
 
-// ─── Main component ───────────────────────────────────────────────────────────
+function formatMetricValue(cv: CriteriaValue, criteria: Criteria): string {
+  if (criteria.data_type === 'percentage') {
+    if (cv.value_number === null) return 'Spread'
+    return `${cv.value_number.toFixed(2).replace('.', ',')} %`
+  }
+  if (criteria.data_type === 'number') {
+    if (cv.value_number === null) return '–'
+    return criteria.unit
+      ? `${cv.value_number.toLocaleString('de-DE')} ${criteria.unit}`
+      : cv.value_number.toLocaleString('de-DE')
+  }
+  return cv.value_text ?? '–'
+}
+
+function ProviderCard({ provider, metricCriteria, boolCriteria, promoCodeCriteria, isFirst }: {
+  provider: Provider
+  metricCriteria: Criteria[]
+  boolCriteria: Criteria[]
+  promoCodeCriteria: Criteria | undefined
+  isFirst: boolean
+}) {
+  const flag = provider.hq_country ? (COUNTRY_FLAGS[provider.hq_country] ?? '') : ''
+  const promoCode = promoCodeCriteria ? provider.values[promoCodeCriteria.slug]?.value_text : null
+
+  return (
+    <div
+      className="rounded-xl border bg-white"
+      style={{
+        borderColor: isFirst ? 'var(--text-primary)' : 'var(--border)',
+        borderWidth: isFirst ? '1.5px' : '1px',
+      }}
+    >
+      <div className="grid grid-cols-1 sm:grid-cols-[1fr_auto] lg:grid-cols-[180px_1fr_auto] gap-0">
+
+        {/* ── Identity ── */}
+        <div className="px-5 py-4 border-b sm:border-b lg:border-b-0 lg:border-r" style={{ borderColor: 'var(--border)' }}>
+          <Link
+            href={`/anbieter/${provider.slug}`}
+            className="font-bold text-base leading-tight hover:underline block mb-1"
+            style={{ color: 'var(--text-primary)', letterSpacing: '-0.01em' }}
+          >
+            {provider.name}
+            {provider.is_verified && (
+              <span title="Verifiziert" style={{ color: 'var(--accent)', marginLeft: '4px', fontSize: '12px' }}>✓</span>
+            )}
+          </Link>
+          <p className="text-xs mb-3" style={{ color: 'var(--text-secondary)' }}>
+            {flag && <span className="mr-1">{flag}</span>}
+            {provider.hq_country}
+          </p>
+          <div className="flex flex-wrap gap-1.5">
+            {boolCriteria.map(c => {
+              const cv = provider.values[c.slug]
+              const isTrue = cv?.value_boolean === true
+              if (!isTrue) return null
+              return (
+                <span
+                  key={c.slug}
+                  className="text-xs px-2 py-0.5 rounded"
+                  style={{
+                    background: 'var(--green-bg)',
+                    color: 'var(--green)',
+                    border: '0.5px solid var(--green-border)',
+                  }}
+                >
+                  {c.name}
+                </span>
+              )
+            })}
+          </div>
+        </div>
+
+        {/* ── Metrics ── */}
+        <div className="flex flex-wrap items-center gap-x-6 gap-y-3 px-5 py-4">
+          {metricCriteria.map(c => {
+            const cv = provider.values[c.slug]
+            if (!cv) return null
+            return (
+              <div key={c.slug}>
+                <p className="text-xs mb-0.5" style={{ color: 'var(--text-secondary)' }}>{c.name}</p>
+                <p className="font-bold text-base" style={{ color: 'var(--text-primary)', letterSpacing: '-0.02em' }}>
+                  {formatMetricValue(cv, c)}
+                </p>
+              </div>
+            )
+          })}
+          {promoCode && (
+            <div>
+              <p className="text-xs mb-0.5" style={{ color: 'var(--text-secondary)' }}>Promo-Code</p>
+              <button
+                onClick={() => navigator.clipboard.writeText(promoCode)}
+                title="Code kopieren"
+                className="font-mono text-sm font-bold px-2.5 py-0.5 rounded border transition-all hover:opacity-70"
+                style={{
+                  background: 'var(--accent-dim)',
+                  borderColor: 'var(--accent)',
+                  color: 'var(--accent)',
+                  letterSpacing: '0.08em',
+                }}
+              >
+                {promoCode} ⎘
+              </button>
+            </div>
+          )}
+        </div>
+
+        {/* ── CTA ── */}
+        <div className="flex items-center px-5 py-4 border-t sm:border-t-0 sm:border-l lg:border-l" style={{ borderColor: 'var(--border)' }}>
+          <a
+            href={provider.website_url}
+            target="_blank"
+            rel="noopener noreferrer sponsored"
+            className="whitespace-nowrap px-5 py-2.5 rounded-lg text-sm font-bold transition-all hover:opacity-80"
+            style={{ background: 'var(--cta-bg)', color: 'var(--cta-text)' }}
+          >
+            Zur Website →
+          </a>
+        </div>
+      </div>
+    </div>
+  )
+}
+
 export default function ComparisonView({ data }: { data: ComparisonData }) {
   const { category, providers } = data
   const [filters, setFilters] = useState<ActiveFilters>({ booleans: {}, selects: {} })
   const [sort, setSort] = useState<SortState | null>(null)
-  const [filtersOpen, setFiltersOpen] = useState(false)
 
-  // Split criteria: highlighted shown by default, rest in "mehr anzeigen"
-  const highlighted = category.criteria.filter(c => c.is_highlighted)
-  const rest = category.criteria.filter(c => !c.is_highlighted)
-  const [showAll, setShowAll] = useState(false)
-  const visibleCriteria = showAll ? category.criteria : highlighted
+  const metricCriteria = category.criteria.filter(
+    c => c.is_highlighted && (c.data_type === 'percentage' || c.data_type === 'number') && c.slug !== 'promo_code'
+  )
+  const boolCriteria = category.criteria.filter(
+    c => c.is_highlighted && c.data_type === 'boolean'
+  )
+  const promoCodeCriteria = category.criteria.find(c => c.slug === 'promo_code')
 
-  // Filter providers
+  const defaultSortSlug = metricCriteria[0]?.slug ?? null
+
   const filtered = useMemo(() => {
     return providers.filter(p => {
       for (const [slug] of Object.entries(filters.booleans)) {
@@ -123,193 +180,107 @@ export default function ComparisonView({ data }: { data: ComparisonData }) {
     })
   }, [providers, filters])
 
-  // Sort
   const sorted = useMemo(() => {
-    if (!sort) return filtered
+    const sortSlug = sort?.slug ?? defaultSortSlug
+    if (!sortSlug) return filtered
+    const dir = sort?.dir ?? 'asc'
     return [...filtered].sort((a, b) => {
-      const av = getSortValue(a, sort.slug)
-      const bv = getSortValue(b, sort.slug)
+      const av = getSortValue(a, sortSlug)
+      const bv = getSortValue(b, sortSlug)
       if (av === bv) return 0
       const cmp = av < bv ? -1 : 1
-      return sort.dir === 'asc' ? cmp : -cmp
+      return dir === 'asc' ? cmp : -cmp
     })
-  }, [filtered, sort])
+  }, [filtered, sort, defaultSortSlug])
 
-  function toggleSort(slug: string) {
-    setSort(prev =>
-      prev?.slug === slug
-        ? { slug, dir: prev.dir === 'asc' ? 'desc' : 'asc' }
-        : { slug, dir: 'asc' }
-    )
+  const activeSortLabel = (() => {
+    const slug = sort?.slug ?? defaultSortSlug
+    if (!slug) return null
+    const c = category.criteria.find(cr => cr.slug === slug)
+    return c ? `${c.name} ${sort?.dir === 'desc' ? '↓' : '↑'}` : null
+  })()
+
+  function cycleSort(slug: string) {
+    setSort(prev => {
+      if (prev?.slug !== slug) return { slug, dir: 'asc' }
+      if (prev.dir === 'asc') return { slug, dir: 'desc' }
+      return null
+    })
   }
-
-  const activeFilterCount =
-    Object.keys(filters.booleans).length +
-    Object.values(filters.selects).filter(v => v.length > 0).length
 
   return (
     <div className="flex flex-col gap-6">
+
       {/* ── Header ── */}
-      <div className="flex items-center justify-between flex-wrap gap-4">
-        <div>
-          <p className="font-mono text-xs tracking-widest uppercase mb-1" style={{ color: 'var(--accent)' }}>
-            Vergleich
-          </p>
-          <h1 className="text-3xl md:text-4xl font-extrabold">{category.name}</h1>
-          <p className="mt-1 text-sm" style={{ color: 'var(--text-secondary)' }}>
-            {sorted.length} von {providers.length} Anbietern
-          </p>
-        </div>
-        <button
-          onClick={() => setFiltersOpen(o => !o)}
-          className="flex items-center gap-2 px-4 py-2 rounded-lg border text-sm transition-all md:hidden"
-          style={{
-            background: filtersOpen ? 'var(--accent-dim)' : 'var(--surface)',
-            borderColor: filtersOpen ? 'var(--accent)' : 'var(--border)',
-            color: filtersOpen ? 'var(--accent)' : 'var(--text-primary)',
-          }}
-        >
-          ⚙ Filter{activeFilterCount > 0 ? ` (${activeFilterCount})` : ''}
-        </button>
+      <div>
+        <p className="text-xs tracking-widest uppercase mb-1 font-medium" style={{ color: 'var(--text-tertiary)' }}>
+          Vergleich
+        </p>
+        <h1 className="text-3xl md:text-4xl font-bold mb-1" style={{ letterSpacing: '-0.03em' }}>
+          {category.name}
+        </h1>
+        <p className="text-sm" style={{ color: 'var(--text-secondary)' }}>
+          {sorted.length} von {providers.length} Anbietern · täglich geprüft
+        </p>
       </div>
 
-      <div className="flex gap-6 items-start">
-        {/* ── Sidebar (desktop always visible, mobile toggle) ── */}
-        <div className={`w-56 flex-shrink-0 ${filtersOpen ? 'block' : 'hidden'} md:block`}>
-          <FilterBar
-            criteria={category.criteria}
-            filters={filters}
-            onChange={setFilters}
-          />
-        </div>
-
-        {/* ── Table ── */}
-        <div className="flex-1 min-w-0">
-          <div className="overflow-x-auto rounded-xl border" style={{ borderColor: 'var(--border)' }}>
-            <table className="w-full text-sm border-collapse">
-              {/* Head */}
-              <thead>
-                <tr style={{ background: 'var(--surface)', borderBottom: '1px solid var(--border)' }}>
-                  {/* Provider column */}
-                  <th
-                    className="sticky left-0 z-10 text-left px-4 py-3 font-medium text-xs tracking-widest uppercase min-w-[160px]"
-                    style={{ background: 'var(--surface)', color: 'var(--text-secondary)', borderRight: '1px solid var(--border)' }}
-                  >
-                    Anbieter
-                  </th>
-                  {visibleCriteria.map(c => (
-                    <th
-                      key={c.slug}
-                      className="text-left px-4 py-3 font-medium text-xs whitespace-nowrap"
-                      style={{ color: c.is_highlighted ? 'var(--accent)' : 'var(--text-secondary)', minWidth: '120px' }}
-                    >
-                      {c.is_sortable ? (
-                        <button
-                          onClick={() => toggleSort(c.slug)}
-                          className="flex items-center gap-1 hover:text-white transition-colors"
-                        >
-                          {c.name}
-                          {c.unit && <span className="opacity-50">({c.unit})</span>}
-                          <span className="opacity-50 ml-1">
-                            {sort?.slug === c.slug ? (sort.dir === 'asc' ? '↑' : '↓') : '↕'}
-                          </span>
-                        </button>
-                      ) : (
-                        <span>{c.name}</span>
-                      )}
-                    </th>
-                  ))}
-                </tr>
-              </thead>
-
-              {/* Body */}
-              <tbody>
-                {sorted.length === 0 && (
-                  <tr>
-                    <td
-                      colSpan={visibleCriteria.length + 1}
-                      className="px-4 py-12 text-center text-sm"
-                      style={{ color: 'var(--text-secondary)' }}
-                    >
-                      Keine Anbieter entsprechen den gewählten Filtern.
-                    </td>
-                  </tr>
-                )}
-                {sorted.map((provider, i) => (
-                  <tr
-                    key={provider.id}
-                    className="group transition-colors"
-                    style={{
-                      borderBottom: '1px solid var(--border)',
-                      background: i % 2 === 0 ? 'var(--bg)' : 'var(--surface)',
-                    }}
-                  >
-                    {/* Provider name */}
-                    <td
-                      className="sticky left-0 z-10 px-4 py-3"
-                      style={{
-                        background: i % 2 === 0 ? 'var(--bg)' : 'var(--surface)',
-                        borderRight: '1px solid var(--border)',
-                      }}
-                    >
-                      <div className="flex flex-col gap-0.5">
-                        <Link
-                          href={`/anbieter/${provider.slug}`}
-                          className="font-semibold text-sm hover:underline flex items-center gap-1.5"
-                          style={{ color: 'var(--text-primary)' }}
-                        >
-                          {provider.name}
-                          {provider.is_verified && (
-                            <span title="Verifizierter Anbieter" style={{ color: 'var(--accent)' }}>✓</span>
-                          )}
-                        </Link>
-                        {provider.hq_country && (
-                          <span className="font-mono text-xs" style={{ color: 'var(--text-secondary)' }}>
-                            {provider.hq_country}
-                          </span>
-                        )}
-                        <a
-                          href={provider.website_url}
-                          target="_blank"
-                          rel="noopener noreferrer sponsored"
-                          className="font-mono text-xs hover:underline"
-                          style={{ color: 'var(--accent)' }}
-                        >
-                          Website →
-                        </a>
-                      </div>
-                    </td>
-
-                    {/* Criteria values */}
-                    {visibleCriteria.map(c => (
-                      <td key={c.slug} className="px-4 py-3">
-                        <CellValue cv={provider.values[c.slug]} criteria={c} />
-                      </td>
-                    ))}
-                  </tr>
-                ))}
-              </tbody>
-            </table>
+      {/* ── Filters + Sort ── */}
+      <div className="flex flex-wrap items-center justify-between gap-3">
+        <FilterBar
+          criteria={category.criteria}
+          filters={filters}
+          onChange={setFilters}
+        />
+        {metricCriteria.length > 0 && (
+          <div className="flex items-center gap-2 flex-shrink-0">
+            <span className="text-xs" style={{ color: 'var(--text-tertiary)' }}>Sortieren:</span>
+            {metricCriteria.slice(0, 3).map(c => (
+              <button
+                key={c.slug}
+                onClick={() => cycleSort(c.slug)}
+                className="text-xs px-2.5 py-1 rounded-full border transition-all"
+                style={{
+                  background: (sort?.slug ?? defaultSortSlug) === c.slug ? 'var(--surface-alt)' : 'transparent',
+                  borderColor: 'var(--border)',
+                  color: (sort?.slug ?? defaultSortSlug) === c.slug ? 'var(--text-primary)' : 'var(--text-secondary)',
+                  fontWeight: (sort?.slug ?? defaultSortSlug) === c.slug ? 500 : 400,
+                }}
+              >
+                {c.name} {(sort?.slug ?? defaultSortSlug) === c.slug ? (sort?.dir === 'desc' ? '↓' : '↑') : ''}
+              </button>
+            ))}
           </div>
-
-          {/* Show more/less toggle */}
-          {rest.length > 0 && (
-            <button
-              onClick={() => setShowAll(v => !v)}
-              className="mt-4 w-full py-2.5 rounded-lg border text-sm font-medium transition-all"
-              style={{
-                background: 'var(--surface)',
-                borderColor: 'var(--border)',
-                color: 'var(--text-secondary)',
-              }}
-            >
-              {showAll
-                ? '↑ Weniger Kriterien anzeigen'
-                : `↓ Alle Kriterien anzeigen (+${rest.length})`}
-            </button>
-          )}
-        </div>
+        )}
       </div>
+
+      {/* ── Provider list ── */}
+      {sorted.length === 0 ? (
+        <div
+          className="rounded-xl border px-6 py-16 text-center text-sm"
+          style={{ borderColor: 'var(--border)', color: 'var(--text-secondary)' }}
+        >
+          Keine Anbieter entsprechen den gewählten Filtern.
+        </div>
+      ) : (
+        <div className="flex flex-col gap-3">
+          {sorted.map((provider, i) => (
+            <ProviderCard
+              key={provider.id}
+              provider={provider}
+              metricCriteria={metricCriteria}
+              boolCriteria={boolCriteria}
+              promoCodeCriteria={promoCodeCriteria}
+              isFirst={i === 0}
+            />
+          ))}
+        </div>
+      )}
+
+      {activeSortLabel && (
+        <p className="text-xs" style={{ color: 'var(--text-tertiary)' }}>
+          Sortiert nach: {activeSortLabel}
+        </p>
+      )}
     </div>
   )
 }

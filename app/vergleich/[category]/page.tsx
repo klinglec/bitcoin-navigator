@@ -62,7 +62,7 @@ export default async function ComparisonPage({
   }
 
   return (
-    <div className="relative min-h-screen grid-bg">
+    <div className="relative min-h-screen" style={{ background: '#f7f6f3' }}>
       <SiteHeader activePath={`/vergleich/${category}`} />
 
       <main className="relative z-10 px-6 md:px-12 py-12">
@@ -71,16 +71,16 @@ export default async function ComparisonPage({
 
       <footer
         className="relative z-10 px-6 md:px-12 py-8 border-t mt-16 text-xs font-mono"
-        style={{ borderColor: 'var(--border)', color: 'var(--text-secondary)' }}
+        style={{ borderColor: '#e0ddd8', color: '#666666' }}
       >
         <div className="flex flex-wrap gap-4 items-center justify-between">
           <span>© 2026 Bitcoin Navigator</span>
           <div className="flex gap-4">
-            <Link href="/impressum" className="hover:text-white transition-colors">Impressum</Link>
-            <Link href="/datenschutz" className="hover:text-white transition-colors">Datenschutz</Link>
+            <Link href="/impressum" className="hover:opacity-70 transition-colors">Impressum</Link>
+            <Link href="/datenschutz" className="hover:opacity-70 transition-colors">Datenschutz</Link>
           </div>
         </div>
-        <p className="mt-2" style={{ color: 'var(--border)' }}>
+        <p className="mt-2" style={{ color: '#999999' }}>
           Affiliate-Links werden transparent gekennzeichnet. Alle Angaben ohne Gewähr – Stand: {new Date().toLocaleDateString('de-DE', { month: 'long', year: 'numeric' })}.
         </p>
       </footer>

@@ -73,7 +73,7 @@ export default function Home() {
           <h1 className="text-5xl md:text-7xl lg:text-8xl font-extrabold leading-[0.95] tracking-tight mb-8">
             Finde die besten Produkte
             <br />
-            <span style={{ color: "var(--accent)" }}>für deine Bitcoin.</span>
+            für deine Bitcoin.
           </h1>
 
           <p
@@ -88,20 +88,20 @@ export default function Home() {
             <Link
               href="/vergleich/boersen"
               className="px-7 py-4 rounded-xl font-bold text-sm transition-all hover:opacity-90"
-              style={{ background: "var(--accent)", color: "#0a0a0a" }}
+              style={{ background: "var(--cta-bg)", color: "var(--cta-text)" }}
             >
               Börsen vergleichen →
             </Link>
             <Link
               href="/vergleich/hardware-wallets"
-              className="px-7 py-4 rounded-xl font-bold text-sm border transition-all hover:border-orange-500"
+              className="px-7 py-4 rounded-xl font-bold text-sm border transition-all hover:border-gray-400"
               style={{ borderColor: "var(--border)", color: "var(--text-primary)", background: "var(--surface)" }}
             >
               Hardware Wallets →
             </Link>
             <Link
               href="/ratgeber"
-              className="px-7 py-4 rounded-xl font-bold text-sm border transition-all hover:border-orange-500"
+              className="px-7 py-4 rounded-xl font-bold text-sm border transition-all hover:border-gray-400"
               style={{ borderColor: "var(--border)", color: "var(--text-primary)", background: "var(--surface)" }}
             >
               Ratgeber →
@@ -118,7 +118,7 @@ export default function Home() {
                 className="rounded-xl p-5 border"
                 style={{ background: "var(--surface)", borderColor: "var(--border)" }}
               >
-                <p className="text-3xl font-extrabold mb-1" style={{ color: "var(--accent)" }}>{s.value}</p>
+                <p className="text-3xl font-extrabold mb-1" style={{ color: "var(--text-primary)", letterSpacing: "-0.03em" }}>{s.value}</p>
                 <p className="text-xs font-mono" style={{ color: "var(--text-secondary)" }}>{s.label}</p>
               </div>
             ))}
@@ -189,7 +189,7 @@ export default function Home() {
               <div key={f.title} className="flex flex-col gap-4">
                 <div
                   className="w-12 h-12 rounded-lg flex items-center justify-center text-2xl font-bold"
-                  style={{ background: "var(--accent-dim)", color: "var(--accent)", border: "1px solid var(--accent)" }}
+                  style={{ background: "var(--surface-alt)", color: "var(--text-primary)", border: "1px solid var(--border)" }}
                 >
                   {f.icon}
                 </div>
@@ -215,7 +215,7 @@ export default function Home() {
           <div className="flex items-center gap-2 mb-4">
             <div
               className="w-6 h-6 rounded flex items-center justify-center font-bold text-xs"
-              style={{ background: "var(--accent)", color: "#0a0a0a" }}
+              style={{ background: "var(--cta-bg)", color: "var(--cta-text)" }}
             >
               ₿
             </div>
@@ -225,15 +225,15 @@ export default function Home() {
             Das unabhängige Bitcoin-Vergleichsportal für Deutschland, Österreich & die Schweiz.
           </p>
           <div className="flex flex-wrap items-center gap-4 mb-4">
-            <Link href="/vergleich/boersen" className="font-mono text-xs transition-colors hover:text-white" style={{ color: "var(--text-secondary)" }}>Börsen</Link>
+            <Link href="/vergleich/boersen" className="font-mono text-xs transition-colors hover:opacity-70" style={{ color: "var(--text-secondary)" }}>Börsen</Link>
             <span style={{ color: "var(--border)" }}>|</span>
-            <Link href="/vergleich/hardware-wallets" className="font-mono text-xs transition-colors hover:text-white" style={{ color: "var(--text-secondary)" }}>Hardware Wallets</Link>
+            <Link href="/vergleich/hardware-wallets" className="font-mono text-xs transition-colors hover:opacity-70" style={{ color: "var(--text-secondary)" }}>Hardware Wallets</Link>
             <span style={{ color: "var(--border)" }}>|</span>
-            <Link href="/ratgeber" className="font-mono text-xs transition-colors hover:text-white" style={{ color: "var(--text-secondary)" }}>Ratgeber</Link>
+            <Link href="/ratgeber" className="font-mono text-xs transition-colors hover:opacity-70" style={{ color: "var(--text-secondary)" }}>Ratgeber</Link>
             <span style={{ color: "var(--border)" }}>|</span>
-            <Link href="/impressum" className="font-mono text-xs transition-colors hover:text-white" style={{ color: "var(--text-secondary)" }}>Impressum</Link>
+            <Link href="/impressum" className="font-mono text-xs transition-colors hover:opacity-70" style={{ color: "var(--text-secondary)" }}>Impressum</Link>
             <span style={{ color: "var(--border)" }}>|</span>
-            <Link href="/datenschutz" className="font-mono text-xs transition-colors hover:text-white" style={{ color: "var(--text-secondary)" }}>Datenschutz</Link>
+            <Link href="/datenschutz" className="font-mono text-xs transition-colors hover:opacity-70" style={{ color: "var(--text-secondary)" }}>Datenschutz</Link>
           </div>
           <p className="font-mono text-xs mb-1" style={{ color: "var(--text-secondary)" }}>
             Affiliate-Links werden transparent gekennzeichnet.
