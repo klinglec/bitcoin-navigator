@@ -254,6 +254,7 @@ export default function ComparisonView({ data }: { data: ComparisonData }) {
       <div className="flex flex-wrap items-center justify-between gap-3">
         <FilterBar
           criteria={category.criteria}
+          providers={providers}
           filters={filters}
           onChange={setFilters}
         />

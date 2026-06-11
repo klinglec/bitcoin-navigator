@@ -1,6 +1,6 @@
 'use client'
 
-import type { Criteria } from '@/lib/types'
+import type { Criteria, Provider } from '@/lib/types'
 
 interface ActiveFilters {
   booleans: Record<string, boolean>
@@ -9,16 +9,27 @@ interface ActiveFilters {
 
 interface Props {
   criteria: Criteria[]
+  providers: Provider[]
   filters: ActiveFilters
   onChange: (filters: ActiveFilters) => void
 }
 
-export default function FilterBar({ criteria, filters, onChange }: Props) {
+export default function FilterBar({ criteria, providers, filters, onChange }: Props) {
   // Nur highlighted+filterable Kriterien als Chips anzeigen – kein Overload
   const boolCriteria = criteria.filter(c => c.is_filterable && c.is_highlighted && c.data_type === 'boolean')
   const selectCriteria = criteria.filter(
     c => c.is_filterable && c.is_highlighted && (c.data_type === 'select' || c.data_type === 'multi_select')
   )
+
+  // Nur Options anzeigen die bei mindestens einem aktiven Anbieter vorkommen
+  function usedOptions(criteriaSlug: string): string[] {
+    const values = new Set<string>()
+    for (const p of providers) {
+      const v = p.values[criteriaSlug]?.value_text
+      if (v) values.add(v)
+    }
+    return Array.from(values)
+  }
 
   const activeCount =
     Object.keys(filters.booleans).length +
@@ -65,8 +76,9 @@ export default function FilterBar({ criteria, filters, onChange }: Props) {
       })}
 
       {selectCriteria.map(c => {
-        const options = c.options ?? []
+        const options = usedOptions(c.slug)  // nur tatsächlich belegte Werte
         const selected = filters.selects[c.slug] ?? []
+        if (options.length <= 1) return null  // kein Filter nötig wenn nur ein Wert
         return options.map(opt => {
           const active = selected.includes(opt)
           return (
