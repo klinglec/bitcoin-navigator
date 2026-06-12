@@ -2,6 +2,7 @@ import CategoryCard, { CategoryData } from "@/components/CategoryCard";
 import SiteHeader from "@/components/SiteHeader";
 import Link from "next/link";
 
+// Verfügbare Kategorien zuerst, Coming-soon danach
 const categories: CategoryData[] = [
   {
     iconKey: "exchanges",
@@ -16,6 +17,12 @@ const categories: CategoryData[] = [
     href: "/vergleich/hardware-wallets",
   },
   {
+    iconKey: "seed",
+    title: "Seed-Backup",
+    desc: "Stahlplatten & Titan-Gravur für deine Seed Phrase – feuerfest, wasserdicht, unzerstörbar.",
+    href: "/vergleich/seed-backup",
+  },
+  {
     iconKey: "insurance",
     title: "Versicherungen",
     desc: "Schutz für Bitcoin-Bestände – Anbieter, Deckung & Konditionen.",
@@ -24,12 +31,6 @@ const categories: CategoryData[] = [
     iconKey: "tax",
     title: "Steuerberater",
     desc: "Bitcoin-erfahrene Steuerberater für DACH – verifiziert & bewertet.",
-  },
-  {
-    iconKey: "seed",
-    title: "Seed-Backup",
-    desc: "Stahlplatten & Titan-Gravur für deine Seed Phrase – feuerfest, wasserdicht, unzerstörbar.",
-    href: "/vergleich/seed-backup",
   },
   {
     iconKey: "coaches",
@@ -59,7 +60,7 @@ const features = [
 const stats = [
   { value: "4", label: "Börsen verglichen" },
   { value: "12", label: "Hardware Wallets" },
-  { value: "21", label: "Kriterien je Kategorie" },
+  { value: "4", label: "Seed-Backup Produkte" },
   { value: "täglich", label: "Daten geprüft" },
 ];
 
@@ -99,6 +100,13 @@ export default function Home() {
               style={{ borderColor: "var(--border)", color: "var(--text-primary)", background: "var(--surface)" }}
             >
               Hardware Wallets →
+            </Link>
+            <Link
+              href="/vergleich/seed-backup"
+              className="px-7 py-4 rounded-xl font-bold text-sm border transition-all hover:border-gray-400"
+              style={{ borderColor: "var(--border)", color: "var(--text-primary)", background: "var(--surface)" }}
+            >
+              Seed-Backup →
             </Link>
             <Link
               href="/ratgeber"
