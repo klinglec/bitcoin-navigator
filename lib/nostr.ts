@@ -205,9 +205,9 @@ export async function signWithBunker(
 // Relays in Prioritätsreihenfolge – erster wird im QR-Code verwendet,
 // alle werden gleichzeitig abgehört (höhere Erfolgswahrscheinlichkeit)
 const NOSTR_RELAYS = [
-  'wss://relay.damus.io',
-  'wss://nos.lol',
   'wss://relay.primal.net',
+  'wss://nos.lol',
+  'wss://relay.nostr.band',
 ]
 
 export async function generateAmberConnectUrl(
