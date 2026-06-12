@@ -10,6 +10,7 @@ export default function SiteHeader({ activePath }: Props) {
     { href: '/vergleich/boersen', label: 'Börsen' },
     { href: '/vergleich/hardware-wallets', label: 'Hardware Wallets' },
     { href: '/vergleich/seed-backup', label: 'Seed-Backup' },
+    { href: '/vergleich/btc-kredite', label: 'BTC-Kredite' },
     { href: '/aktionen', label: 'Aktionen' },
     { href: '/ratgeber', label: 'Ratgeber' },
   ]

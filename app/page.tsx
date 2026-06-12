@@ -23,6 +23,12 @@ const categories: CategoryData[] = [
     href: "/vergleich/seed-backup",
   },
   {
+    iconKey: "loan",
+    title: "Bitcoin-Kredite",
+    desc: "Bitcoin als Sicherheit – Fiat-Kredit ohne zu verkaufen. Non-Custodial & MiCA-reguliert.",
+    href: "/vergleich/btc-kredite",
+  },
+  {
     iconKey: "insurance",
     title: "Versicherungen",
     desc: "Schutz für Bitcoin-Bestände – Anbieter, Deckung & Konditionen.",
