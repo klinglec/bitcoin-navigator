@@ -92,6 +92,25 @@ export async function getProviderDetail(slug: string): Promise<ProviderDetail | 
   }
 }
 
+export interface EditorialReview {
+  rating: number
+  title: string | null
+  body: string
+  editorial_author: string | null
+}
+
+export async function getEditorialReviews(providerId: string): Promise<EditorialReview[]> {
+  const supabase = getClient()
+  const { data } = await supabase
+    .from('user_reviews')
+    .select('rating, title, body, editorial_author')
+    .eq('provider_id', providerId)
+    .eq('is_editorial', true)
+    .eq('status', 'approved')
+    .is('deleted_at', null)
+  return (data ?? []) as EditorialReview[]
+}
+
 export async function getAllProviderSlugs(): Promise<string[]> {
   const supabase = getClient()
   const { data } = await supabase

@@ -1,4 +1,4 @@
-import { getProviderDetail, getAllProviderSlugs } from '@/lib/provider'
+import { getProviderDetail, getAllProviderSlugs, getEditorialReviews } from '@/lib/provider'
 import Link from 'next/link'
 import { notFound } from 'next/navigation'
 import type { Criteria, CriteriaValue } from '@/lib/types'
@@ -81,8 +81,53 @@ export default async function ProviderPage({ params }: { params: Promise<{ slug:
     'hardware-wallets': '/vergleich/hardware-wallets',
   }
 
+  // JSON-LD Structured Data
+  const editorialReviews = await getEditorialReviews(provider.id)
+  const avgRating = editorialReviews.length > 0
+    ? (editorialReviews.reduce((s, r) => s + r.rating, 0) / editorialReviews.length).toFixed(1)
+    : null
+
+  const jsonLd = {
+    '@context': 'https://schema.org',
+    '@type': 'Product',
+    name: provider.name,
+    description: provider.description ?? `${provider.name} im Vergleich auf Bitcoin Navigator`,
+    url: `https://bitcoinnavigator.de/anbieter/${provider.slug}`,
+    brand: { '@type': 'Brand', name: provider.name },
+    ...(avgRating && {
+      aggregateRating: {
+        '@type': 'AggregateRating',
+        ratingValue: avgRating,
+        reviewCount: editorialReviews.length,
+        bestRating: '5',
+        worstRating: '1',
+      },
+    }),
+    ...(editorialReviews.length > 0 && {
+      review: editorialReviews.map(r => ({
+        '@type': 'Review',
+        reviewRating: {
+          '@type': 'Rating',
+          ratingValue: String(r.rating),
+          bestRating: '5',
+          worstRating: '1',
+        },
+        author: {
+          '@type': 'Organization',
+          name: r.editorial_author ?? 'Bitcoin Navigator Redaktion',
+        },
+        reviewBody: r.body,
+        ...(r.title && { name: r.title }),
+      })),
+    }),
+  }
+
   return (
     <div className="relative min-h-screen grid-bg">
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+      />
       <SiteHeader />
 
       <main className="relative z-10 px-6 md:px-12 py-12 max-w-4xl">
