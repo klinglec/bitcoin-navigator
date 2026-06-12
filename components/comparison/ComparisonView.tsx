@@ -4,6 +4,7 @@ import { useState, useMemo } from 'react'
 import Link from 'next/link'
 import type { ComparisonData, Criteria, Provider, CriteriaValue } from '@/lib/types'
 import FilterBar from './FilterBar'
+import PromoCodeButton from '@/components/PromoCodeButton'
 
 interface ActiveFilters {
   booleans: Record<string, boolean>
@@ -51,6 +52,7 @@ function ProviderCard({ provider, metricCriteria, boolCriteria, promoCodeCriteri
 }) {
   const flag = provider.hq_country ? (COUNTRY_FLAGS[provider.hq_country] ?? '') : ''
   const promoCode = promoCodeCriteria ? provider.values[promoCodeCriteria.slug]?.value_text : null
+  const promoBenefit = promoCodeCriteria ? provider.values[promoCodeCriteria.slug]?.notes : null
 
   return (
     <div
@@ -143,19 +145,7 @@ function ProviderCard({ provider, metricCriteria, boolCriteria, promoCodeCriteri
           {promoCode && (
             <div>
               <p className="text-xs mb-0.5" style={{ color: 'var(--text-secondary)' }}>Promo-Code</p>
-              <button
-                onClick={() => navigator.clipboard.writeText(promoCode)}
-                title="Code kopieren"
-                className="font-mono text-sm font-bold px-2.5 py-0.5 rounded border transition-all hover:opacity-70"
-                style={{
-                  background: 'var(--accent-dim)',
-                  borderColor: 'var(--accent)',
-                  color: 'var(--accent)',
-                  letterSpacing: '0.08em',
-                }}
-              >
-                {promoCode} ⎘
-              </button>
+              <PromoCodeButton code={promoCode} benefit={promoBenefit} />
             </div>
           )}
         </div>

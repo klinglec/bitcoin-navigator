@@ -38,7 +38,7 @@ export async function getComparisonData(categorySlug: string): Promise<Compariso
       sort_order,
       providers(
         id, slug, name, logo_url, website_url, hq_country, is_verified,
-        criteria_values(criteria_id, value_number, value_boolean, value_text, value_json)
+        criteria_values(criteria_id, value_number, value_boolean, value_text, value_json, notes)
       )
     `)
     .eq('category_id', category.id)

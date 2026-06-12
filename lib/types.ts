@@ -28,6 +28,7 @@ export interface CriteriaValue {
   value_boolean: boolean | null
   value_text: string | null
   value_json: unknown
+  notes?: string | null
 }
 
 export interface Provider {

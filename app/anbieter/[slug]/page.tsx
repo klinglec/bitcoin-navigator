@@ -65,7 +65,7 @@ function ValueDisplay({ criteria, value }: { criteria: Criteria; value: Criteria
     )
   }
   if (criteria.slug === 'promo_code' && value.value_text) {
-    return <PromoCodeButton code={value.value_text} />
+    return <PromoCodeButton code={value.value_text} benefit={value.notes} />
   }
   return <span>{value.value_text ?? '–'}</span>
 }

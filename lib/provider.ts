@@ -37,7 +37,7 @@ export async function getProviderDetail(slug: string): Promise<ProviderDetail | 
         categories(id, slug, name)
       ),
       criteria_values(
-        criteria_id, value_number, value_boolean, value_text, value_json,
+        criteria_id, value_number, value_boolean, value_text, value_json, notes,
         criteria(id, slug, name, data_type, unit, is_highlighted, sort_order, options, is_filterable, is_sortable, weight,
           category_id,
           categories(slug, name)
@@ -68,7 +68,7 @@ export async function getProviderDetail(slug: string): Promise<ProviderDetail | 
     }
     groupMap[cat.slug].items.push({
       criteria: cv.criteria as Criteria,
-      value: { criteria_id: cv.criteria_id, value_number: cv.value_number, value_boolean: cv.value_boolean, value_text: cv.value_text, value_json: cv.value_json },
+      value: { criteria_id: cv.criteria_id, value_number: cv.value_number, value_boolean: cv.value_boolean, value_text: cv.value_text, value_json: cv.value_json, notes: cv.notes },
     })
   }
 
