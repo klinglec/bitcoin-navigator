@@ -73,6 +73,9 @@ export default function LoginPage() {
           Melde dich mit deiner Nostr-Browser-Extension an.
           Kompatibel mit <strong style={{ color: '#1a1a1a' }}>Alby</strong>, <strong style={{ color: '#1a1a1a' }}>nos2x</strong> und anderen NIP-07-Extensions.
         </p>
+        <div className="rounded-lg border p-3 text-xs" style={{ borderColor: '#e0ddd8', background: '#f7f6f3', color: '#666666' }}>
+          <strong style={{ color: '#1a1a1a' }}>Primal-Nutzer:</strong> Öffne bitcoinnavigator.de direkt im Primal In-App-Browser (Link teilen → In Primal öffnen). Dann funktioniert dieser Tab automatisch.
+        </div>
 
         {hasExt ? (
           <button
