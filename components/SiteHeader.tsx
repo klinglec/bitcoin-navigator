@@ -9,6 +9,7 @@ export default function SiteHeader({ activePath }: Props) {
   const navLinks = [
     { href: '/vergleich/boersen', label: 'Börsen' },
     { href: '/vergleich/hardware-wallets', label: 'Hardware Wallets' },
+    { href: '/aktionen', label: 'Aktionen' },
     { href: '/ratgeber', label: 'Ratgeber' },
   ]
 
