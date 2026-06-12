@@ -24,9 +24,6 @@ export default function RegisterPage() {
     const { error } = await supabase.auth.signUp({
       email: email.trim().toLowerCase(),
       password,
-      options: {
-        emailRedirectTo: `${window.location.origin}/account/login`,
-      },
     })
 
     if (error) {
@@ -34,10 +31,24 @@ export default function RegisterPage() {
       setMessage(error.message === 'User already registered'
         ? 'Diese E-Mail ist bereits registriert.'
         : 'Registrierung fehlgeschlagen. Bitte versuche es erneut.')
-    } else {
-      setStatus('success')
-      setMessage('Bitte prüfe deine E-Mails und bestätige deine Adresse.')
+      return
     }
+
+    // Bestätigungsmail via Resend API senden (umgeht Supabase SMTP)
+    const mailRes = await fetch('/api/auth/send-confirmation', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ email: email.trim().toLowerCase() }),
+    })
+
+    if (!mailRes.ok) {
+      setStatus('error')
+      setMessage('Konto erstellt, aber Bestätigungsmail konnte nicht gesendet werden. Bitte wende dich an den Support.')
+      return
+    }
+
+    setStatus('success')
+    setMessage('Fast geschafft! Prüfe deine E-Mails und klicke auf den Bestätigungslink.')
   }
 
   return (
