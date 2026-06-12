@@ -256,22 +256,13 @@ export async function generateAmberConnectUrl(
 
         const sinceTs = Math.floor(Date.now() / 1000) - 30
 
-        function handleSocket(ws: WebSocket, isPrimalRelay: boolean) {
+        function handleSocket(ws: WebSocket) {
           ws.onopen = () => {
             onStatus('Verbunden. Warte auf Signer…')
-            // Haupt-Subscription: gefiltert auf unseren Pubkey
             ws.send(JSON.stringify([
               'REQ', 'sub1',
               { kinds: [24133], '#p': [localPubkeyHex], since: sinceTs },
             ]))
-            // Auf relay.primal.net: zweite Subscription ohne #p-Filter
-            // → fängt auf, falls Primal das Tag anders setzt
-            if (isPrimalRelay) {
-              ws.send(JSON.stringify([
-                'REQ', 'sub2',
-                { kinds: [24133], since: sinceTs, limit: 0 },
-              ]))
-            }
           }
 
           ws.onmessage = async (msg) => {
@@ -281,13 +272,6 @@ export async function generateAmberConnectUrl(
               if (data[0] !== 'EVENT') return
               const event: NostrEvent = data[2]
               if (event.kind !== 24133) return
-              // Nur Events verarbeiten die an uns adressiert sind ODER von sub2 kommen
-              const pTags: string[] = (event.tags ?? [])
-                .filter((t: string[]) => t[0] === 'p')
-                .map((t: string[]) => t[1])
-              const isAddressedToUs = pTags.includes(localPubkeyHex)
-              const isFromSub2 = data[1] === 'sub2'
-              if (!isAddressedToUs && !isFromSub2) return
 
               // NIP-04 versuchen, bei Fehler NIP-44
               let decrypted: string
@@ -337,13 +321,15 @@ export async function generateAmberConnectUrl(
                 cleanup()
                 resolve({ pubkeyHex: remotePubkey, signedEvent })
               }
-            } catch (err) { if (!resolved) { cleanup(); reject(err) } }
+            } catch {
+              // Dekryptierungsfehler oder falsches Event – ignorieren, weiter warten
+            }
           }
 
           ws.onerror = () => { /* anderer Socket übernimmt ggf. */ }
         }
 
-        sockets.forEach((ws, i) => handleSocket(ws, NOSTR_RELAYS[i] === 'wss://relay.primal.net'))
+        sockets.forEach(handleSocket)
       }),
   }
 }
