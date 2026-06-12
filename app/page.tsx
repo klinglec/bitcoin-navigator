@@ -26,9 +26,10 @@ const categories: CategoryData[] = [
     desc: "Bitcoin-erfahrene Steuerberater für DACH – verifiziert & bewertet.",
   },
   {
-    iconKey: "legal",
-    title: "Rechtsanwälte",
-    desc: "Rechtssicherheit im Bitcoin-Recht – Kanzleien mit Krypto-Expertise.",
+    iconKey: "seed",
+    title: "Seed-Backup",
+    desc: "Stahlplatten & Titan-Gravur für deine Seed Phrase – feuerfest, wasserdicht, unzerstörbar.",
+    href: "/vergleich/seed-backup",
   },
   {
     iconKey: "coaches",

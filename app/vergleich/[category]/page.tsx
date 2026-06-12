@@ -8,7 +8,7 @@ import { notFound } from 'next/navigation'
 // → Datenbankänderungen gehen automatisch live, kein manueller Redeploy nötig
 export const revalidate = 3600
 
-const VALID_CATEGORIES = ['boersen', 'hardware-wallets']
+const VALID_CATEGORIES = ['boersen', 'hardware-wallets', 'seed-backup']
 
 export async function generateStaticParams() {
   return VALID_CATEGORIES.map(category => ({ category }))
@@ -24,6 +24,10 @@ export async function generateMetadata({ params }: { params: Promise<{ category:
     'hardware-wallets': {
       title: 'Hardware Wallet Vergleich 2026 – Ledger, Trezor, BitBox & mehr | Bitcoin Navigator',
       description: '12 Hardware Wallets im Vergleich: Preis, Open-Source-Firmware, Secure Element, UX-Score & Lieferzeit. Finde das beste Wallet für deine Bitcoin.',
+    },
+    'seed-backup': {
+      title: 'Seed-Backup Vergleich 2026 – Cryptosteel, CRYPTOTAG, Blockplate & mehr | Bitcoin Navigator',
+      description: '5 Seed-Backup Lösungen im Vergleich: Preis, Material, Methode & Temperaturbeständigkeit. Schütze deine Bitcoin-Seed Phrase mit einer Stahlplatte.',
     },
   }
   const m = meta[category]
