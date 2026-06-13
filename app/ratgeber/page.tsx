@@ -36,6 +36,20 @@ const articles = [
     tag: "Self-Custody",
     readTime: "4 min",
   },
+  {
+    slug: "seed-backup",
+    title: "Seed Backup: So sicherst du deinen Bitcoin langfristig",
+    desc: "Metallplatten, mehrere Kopien, BIP-39 Passphrase und Vererbungsplanung – der vollständige Guide für dauerhaft sicheres Seed-Backup.",
+    tag: "Self-Custody",
+    readTime: "6 min",
+  },
+  {
+    slug: "btc-kredite",
+    title: "Bitcoin beleihen statt verkaufen – wie Bitcoin-Kredite funktionieren",
+    desc: "Bitcoin als Sicherheit hinterlegen und Liquidität erhalten, ohne zu verkaufen. Funktionsweise, Risiken und worauf du bei der Anbieterwahl achten musst.",
+    tag: "Bitcoin Kredite",
+    readTime: "7 min",
+  },
 ];
 
 export default function Ratgeber() {
