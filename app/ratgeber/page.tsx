@@ -9,32 +9,12 @@ export const metadata = {
 
 const articles = [
   {
-    slug: "bitcoin-boerse-gebuehren",
-    title: "Warum die Wahl der Bitcoin-Börse mehr kostet als du denkst",
-    desc: "Wer monatlich 200€ in Bitcoin spart, zahlt je nach Börse bis zu 30× mehr Gebühren. Mit Rechenbeispielen und Erklärung von Spread vs. Maker/Taker.",
-    tag: "Börsen",
-    readTime: "5 min",
-  },
-  {
-    slug: "hardware-wallet-erklaerung",
-    title: "Was ist ein Hardware Wallet – und wann brauchst du wirklich eines?",
-    desc: "Ab welchem Betrag lohnt sich ein Hardware Wallet? Was Self-Custody bedeutet und welche Risiken du damit eliminierst.",
-    tag: "Hardware Wallets",
-    readTime: "6 min",
-  },
-  {
-    slug: "bitcoin-sparplan-dca",
-    title: "Bitcoin-Sparplan einrichten: So funktioniert DCA in der Praxis",
-    desc: "Was ist Dollar-Cost-Averaging, warum empfehlen es so viele Bitcoiner, und welche Anbieter bieten in DACH den günstigsten Sparplan?",
-    tag: "Sparplan",
-    readTime: "5 min",
-  },
-  {
-    slug: "seed-phrase-sichern",
-    title: "Seed Phrase: Der häufigste Fehler beim Bitcoin-Sichern",
-    desc: "Warum Screenshots und Cloud-Backups gefährlich sind – und warum physische Stahlplatten die einzig sinnvolle Lösung sind.",
-    tag: "Self-Custody",
-    readTime: "4 min",
+    slug: "btc-kredite",
+    title: "Bitcoin beleihen statt verkaufen – wie Bitcoin-Kredite funktionieren",
+    desc: "Bitcoin als Sicherheit hinterlegen und Liquidität erhalten, ohne zu verkaufen. Funktionsweise, Risiken und worauf du bei der Anbieterwahl achten musst.",
+    tag: "Bitcoin Kredite",
+    readTime: "7 min",
+    date: "13. Juni 2026",
   },
   {
     slug: "seed-backup",
@@ -42,13 +22,39 @@ const articles = [
     desc: "Metallplatten, mehrere Kopien, BIP-39 Passphrase und Vererbungsplanung – der vollständige Guide für dauerhaft sicheres Seed-Backup.",
     tag: "Self-Custody",
     readTime: "6 min",
+    date: "13. Juni 2026",
   },
   {
-    slug: "btc-kredite",
-    title: "Bitcoin beleihen statt verkaufen – wie Bitcoin-Kredite funktionieren",
-    desc: "Bitcoin als Sicherheit hinterlegen und Liquidität erhalten, ohne zu verkaufen. Funktionsweise, Risiken und worauf du bei der Anbieterwahl achten musst.",
-    tag: "Bitcoin Kredite",
-    readTime: "7 min",
+    slug: "seed-phrase-sichern",
+    title: "Seed Phrase: Der häufigste Fehler beim Bitcoin-Sichern",
+    desc: "Warum Screenshots und Cloud-Backups gefährlich sind – und warum physische Stahlplatten die einzig sinnvolle Lösung sind.",
+    tag: "Self-Custody",
+    readTime: "4 min",
+    date: "10. Juni 2026",
+  },
+  {
+    slug: "bitcoin-sparplan-dca",
+    title: "Bitcoin-Sparplan einrichten: So funktioniert DCA in der Praxis",
+    desc: "Was ist Dollar-Cost-Averaging, warum empfehlen es so viele Bitcoiner, und welche Anbieter bieten in DACH den günstigsten Sparplan?",
+    tag: "Sparplan",
+    readTime: "5 min",
+    date: "10. Juni 2026",
+  },
+  {
+    slug: "hardware-wallet-erklaerung",
+    title: "Was ist ein Hardware Wallet – und wann brauchst du wirklich eines?",
+    desc: "Ab welchem Betrag lohnt sich ein Hardware Wallet? Was Self-Custody bedeutet und welche Risiken du damit eliminierst.",
+    tag: "Hardware Wallets",
+    readTime: "6 min",
+    date: "10. Juni 2026",
+  },
+  {
+    slug: "bitcoin-boerse-gebuehren",
+    title: "Warum die Wahl der Bitcoin-Börse mehr kostet als du denkst",
+    desc: "Wer monatlich 200€ in Bitcoin spart, zahlt je nach Börse bis zu 30× mehr Gebühren. Mit Rechenbeispielen und Erklärung von Spread vs. Maker/Taker.",
+    tag: "Börsen",
+    readTime: "5 min",
+    date: "10. Juni 2026",
   },
 ];
 
@@ -91,6 +97,7 @@ export default function Ratgeber() {
                   {a.tag}
                 </span>
                 <span className="font-mono text-xs" style={{ color: "var(--text-secondary)" }}>{a.readTime} Lesezeit</span>
+                <span className="font-mono text-xs" style={{ color: "var(--text-secondary)" }}>{a.date}</span>
               </div>
               <h2 className="text-xl font-bold mb-2 group-hover:text-orange-400 transition-colors">{a.title}</h2>
               <p className="text-sm leading-relaxed" style={{ color: "var(--text-secondary)" }}>{a.desc}</p>
