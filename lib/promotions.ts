@@ -24,6 +24,45 @@ export function countryFlag(code: string | null): string {
   return code ? (COUNTRY_FLAGS[code] ?? '') : ''
 }
 
+export interface ReferralLink {
+  provider_slug: string
+  provider_name: string
+  provider_country: string | null
+  url: string
+  category_slug: string | null
+  benefit: string | null
+}
+
+export async function getReferralLinks(): Promise<ReferralLink[]> {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const supabase = getClient() as any
+
+  const { data: rows } = await supabase
+    .from('affiliate_links')
+    .select(`
+      url, commission_notes,
+      providers!inner(slug, name, hq_country, is_active, deleted_at),
+      categories(slug)
+    `)
+    .eq('is_active', true)
+    .eq('providers.is_active', true)
+
+  if (!rows) return []
+
+  return rows
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    .filter((r: any) => !r.providers?.deleted_at)
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    .map((r: any) => ({
+      provider_slug: r.providers.slug,
+      provider_name: r.providers.name,
+      provider_country: r.providers.hq_country,
+      url: r.url,
+      category_slug: r.categories?.slug ?? null,
+      benefit: r.commission_notes ?? null,
+    }))
+}
+
 export async function getPromoCodes(): Promise<PromoCode[]> {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const supabase = getClient() as any
