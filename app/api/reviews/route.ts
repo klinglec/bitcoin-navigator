@@ -33,14 +33,15 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: 'Nicht angemeldet.' }, { status: 401 })
     }
 
+    // Client mit User-JWT initialisieren → auth.uid() in RLS-Policies funktioniert
+    const token = authHeader.replace('Bearer ', '')
     const supabase = createClient(
       process.env.NEXT_PUBLIC_SUPABASE_URL!,
-      process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
+      process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
+      { global: { headers: { Authorization: `Bearer ${token}` } } }
     )
 
-    const { data: { user }, error: authError } = await supabase.auth.getUser(
-      authHeader.replace('Bearer ', '')
-    )
+    const { data: { user }, error: authError } = await supabase.auth.getUser()
 
     if (authError || !user) {
       return NextResponse.json({ error: 'Ungültige Sitzung.' }, { status: 401 })
@@ -222,14 +223,14 @@ export async function DELETE(req: NextRequest) {
       return NextResponse.json({ error: 'Nicht angemeldet.' }, { status: 401 })
     }
 
+    const token2 = authHeader.replace('Bearer ', '')
     const supabase = createClient(
       process.env.NEXT_PUBLIC_SUPABASE_URL!,
-      process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
+      process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
+      { global: { headers: { Authorization: `Bearer ${token2}` } } }
     )
 
-    const { data: { user }, error: authError } = await supabase.auth.getUser(
-      authHeader.replace('Bearer ', '')
-    )
+    const { data: { user }, error: authError } = await supabase.auth.getUser()
 
     if (authError || !user) {
       return NextResponse.json({ error: 'Ungültige Sitzung.' }, { status: 401 })
