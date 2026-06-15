@@ -43,10 +43,11 @@ function formatMetricValue(cv: CriteriaValue, criteria: Criteria): string {
   return cv.value_text ?? '–'
 }
 
-function ProviderCard({ provider, metricCriteria, boolCriteria, promoCodeCriteria, isFirst }: {
+function ProviderCard({ provider, metricCriteria, boolCriteria, textCriteria, promoCodeCriteria, isFirst }: {
   provider: Provider
   metricCriteria: Criteria[]
   boolCriteria: Criteria[]
+  textCriteria: Criteria[]
   promoCodeCriteria: Criteria | undefined
   isFirst: boolean
 }) {
@@ -142,6 +143,18 @@ function ProviderCard({ provider, metricCriteria, boolCriteria, promoCodeCriteri
               )
             })
           })()}
+          {textCriteria.map(c => {
+            const cv = provider.values[c.slug]
+            if (!cv?.value_text) return null
+            return (
+              <div key={c.slug}>
+                <p className="text-xs mb-0.5" style={{ color: 'var(--text-secondary)' }}>{c.name}</p>
+                <p className="text-sm font-medium" style={{ color: 'var(--text-primary)' }}>
+                  {cv.value_text}
+                </p>
+              </div>
+            )
+          })}
           {promoCode && (
             <div>
               <p className="text-xs mb-0.5" style={{ color: 'var(--text-secondary)' }}>Promo-Code</p>
@@ -177,6 +190,9 @@ export default function ComparisonView({ data }: { data: ComparisonData }) {
   )
   const boolCriteria = category.criteria.filter(
     c => c.is_highlighted && c.data_type === 'boolean'
+  )
+  const textCriteria = category.criteria.filter(
+    c => c.is_highlighted && c.data_type === 'text' && c.slug !== 'promo_code'
   )
   const promoCodeCriteria = category.criteria.find(c => c.slug === 'promo_code')
 
@@ -286,6 +302,7 @@ export default function ComparisonView({ data }: { data: ComparisonData }) {
               provider={provider}
               metricCriteria={metricCriteria}
               boolCriteria={boolCriteria}
+              textCriteria={textCriteria}
               promoCodeCriteria={promoCodeCriteria}
               isFirst={i === 0}
             />

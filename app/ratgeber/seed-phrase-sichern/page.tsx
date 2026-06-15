@@ -9,21 +9,13 @@ export const metadata = {
 
 export default function ArtikelSeedPhrase() {
   return (
-    <div className="relative min-h-screen grid-bg">
-      <header className="relative z-10 flex items-center justify-between px-6 md:px-12 py-6 border-b"
-        style={{ borderColor: "var(--border)" }}>
-        <Link href="/" className="flex items-center gap-2">
-          <div className="w-8 h-8 rounded flex items-center justify-center font-bold text-sm"
-            style={{ background: "var(--accent)", color: "#0a0a0a" }}>₿</div>
-          <span className="font-bold text-sm tracking-widest uppercase" style={{ letterSpacing: "0.15em" }}>
-            Bitcoin Navigator
-          </span>
-        </Link>
-        <Link href="/ratgeber" className="font-mono text-xs hover:text-white transition-colors"
-          style={{ color: "var(--text-secondary)" }}>← Ratgeber</Link>
-      </header>
+    <div className="relative min-h-screen" style={{ background: '#f7f6f3' }}>
+      <SiteHeader activePath="/ratgeber" />
 
       <main className="relative z-10 px-6 md:px-12 py-16 max-w-2xl">
+        <div className="mb-8">
+          <Link href="/ratgeber" className="font-mono text-xs transition-colors hover:opacity-70" style={{ color: '#666666' }}>← Ratgeber</Link>
+        </div>
         <div className="flex items-center gap-3 mb-6">
           <span className="font-mono text-xs px-2 py-1 rounded-full border"
             style={{ borderColor: "var(--accent)", color: "var(--accent)", background: "var(--accent-dim)" }}>
@@ -177,7 +169,7 @@ export default function ArtikelSeedPhrase() {
       </main>
 
       <footer className="relative z-10 px-6 md:px-12 py-8 border-t mt-16 text-xs font-mono"
-        style={{ borderColor: "var(--border)", color: "var(--text-secondary)" }}>
+        style={{ borderColor: '#e0ddd8', color: '#666666' }}>
         <div className="flex flex-wrap gap-4 items-center justify-between">
           <span>© 2026 Bitcoin Navigator</span>
           <div className="flex gap-4">

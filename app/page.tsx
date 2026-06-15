@@ -29,6 +29,12 @@ const categories: CategoryData[] = [
     href: "/vergleich/btc-kredite",
   },
   {
+    iconKey: "payments",
+    title: "Zahlungsdienste",
+    desc: "Mit Bitcoin & Lightning im Alltag bezahlen – Gutscheine, eSIMs & Handy-Aufladungen für DACH.",
+    href: "/vergleich/zahlungsdienste",
+  },
+  {
     iconKey: "insurance",
     title: "Versicherungen",
     desc: "Schutz für Bitcoin-Bestände – Anbieter, Deckung & Konditionen.",
@@ -64,9 +70,11 @@ const features = [
 ];
 
 const stats = [
-  { value: "4", label: "Börsen verglichen" },
+  { value: "8", label: "Börsen verglichen" },
   { value: "12", label: "Hardware Wallets" },
   { value: "4", label: "Seed-Backup Produkte" },
+  { value: "3", label: "BTC-Kredit Anbieter" },
+  { value: "2", label: "Zahlungsdienste" },
   { value: "täglich", label: "Daten geprüft" },
 ];
 
@@ -115,6 +123,20 @@ export default function Home() {
               Seed-Backup →
             </Link>
             <Link
+              href="/vergleich/btc-kredite"
+              className="px-7 py-4 rounded-xl font-bold text-sm border transition-all hover:border-gray-400"
+              style={{ borderColor: "var(--border)", color: "var(--text-primary)", background: "var(--surface)" }}
+            >
+              BTC-Kredite →
+            </Link>
+            <Link
+              href="/vergleich/zahlungsdienste"
+              className="px-7 py-4 rounded-xl font-bold text-sm border transition-all hover:border-gray-400"
+              style={{ borderColor: "var(--border)", color: "var(--text-primary)", background: "var(--surface)" }}
+            >
+              Zahlungsdienste →
+            </Link>
+            <Link
               href="/ratgeber"
               className="px-7 py-4 rounded-xl font-bold text-sm border transition-all hover:border-gray-400"
               style={{ borderColor: "var(--border)", color: "var(--text-primary)", background: "var(--surface)" }}
@@ -126,14 +148,14 @@ export default function Home() {
 
         {/* ── STATS ── */}
         <section className="px-6 md:px-12 pb-16 max-w-5xl">
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
             {stats.map((s) => (
               <div
                 key={s.label}
                 className="rounded-xl p-5 border"
                 style={{ background: "var(--surface)", borderColor: "var(--border)" }}
               >
-                <p className="text-3xl font-extrabold mb-1" style={{ color: "var(--text-primary)", letterSpacing: "-0.03em" }}>{s.value}</p>
+                <p className={`font-extrabold mb-1 ${s.value.length > 4 ? 'text-xl' : 'text-3xl'}`} style={{ color: "var(--text-primary)", letterSpacing: "-0.03em" }}>{s.value}</p>
                 <p className="text-xs font-mono" style={{ color: "var(--text-secondary)" }}>{s.label}</p>
               </div>
             ))}

@@ -11,6 +11,7 @@ export default function SiteHeader({ activePath }: Props) {
     { href: '/vergleich/hardware-wallets', label: 'Hardware Wallets' },
     { href: '/vergleich/seed-backup', label: 'Seed-Backup' },
     { href: '/vergleich/btc-kredite', label: 'BTC-Kredite' },
+    { href: '/vergleich/zahlungsdienste', label: 'Zahlungsdienste' },
     { href: '/aktionen', label: 'Aktionen' },
     { href: '/ratgeber', label: 'Ratgeber' },
   ]

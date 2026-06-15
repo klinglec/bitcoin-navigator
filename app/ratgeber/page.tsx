@@ -9,6 +9,14 @@ export const metadata = {
 
 const articles = [
   {
+    slug: "bitcoin-zahlungsdienste",
+    title: "Mit Bitcoin im Alltag bezahlen – so geht's heute schon",
+    desc: "Gutscheine, eSIMs und Handy-Aufladungen mit Bitcoin und Lightning kaufen. Bitrefill vs. Cryptorefills für den DACH-Raum.",
+    tag: "Zahlungsdienste",
+    readTime: "5 min",
+    date: "14. Juni 2026",
+  },
+  {
     slug: "btc-kredite",
     title: "Bitcoin beleihen statt verkaufen – wie Bitcoin-Kredite funktionieren",
     desc: "Bitcoin als Sicherheit hinterlegen und Liquidität erhalten, ohne zu verkaufen. Funktionsweise, Risiken und worauf du bei der Anbieterwahl achten musst.",

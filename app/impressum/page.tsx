@@ -24,8 +24,8 @@ export default function Impressum() {
           </h2>
           <p className="leading-relaxed">
             Christian Klingler<br />
-            Scillawaldstr. 79<br />
-            70378 Stuttgart<br />
+            Im Brühl 43<br />
+            70734 Fellbach<br />
             Deutschland
           </p>
         </section>

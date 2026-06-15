@@ -8,7 +8,7 @@ import { notFound } from 'next/navigation'
 // → Datenbankänderungen gehen automatisch live, kein manueller Redeploy nötig
 export const revalidate = 3600
 
-const VALID_CATEGORIES = ['boersen', 'hardware-wallets', 'seed-backup', 'btc-kredite']
+const VALID_CATEGORIES = ['boersen', 'hardware-wallets', 'seed-backup', 'btc-kredite', 'zahlungsdienste']
 
 export async function generateStaticParams() {
   return VALID_CATEGORIES.map(category => ({ category }))
@@ -32,6 +32,10 @@ export async function generateMetadata({ params }: { params: Promise<{ category:
     'btc-kredite': {
       title: 'Bitcoin-Kredit Vergleich 2026 – Firefish, Debifi & mehr | Bitcoin Navigator',
       description: 'Bitcoin als Sicherheit für Fiat-Kredite – ohne zu verkaufen. Non-Custodiale Anbieter mit MiCA-Regulierung für den DACH-Raum verglichen.',
+    },
+    'zahlungsdienste': {
+      title: 'Bitcoin Zahlungsdienste Vergleich 2026 – Bitrefill vs. Cryptorefills | Bitcoin Navigator',
+      description: 'Gutscheine, eSIMs und Handy-Aufladungen mit Bitcoin & Lightning kaufen. Bitrefill und Cryptorefills im Vergleich für den DACH-Raum.',
     },
   }
   const m = meta[category]
