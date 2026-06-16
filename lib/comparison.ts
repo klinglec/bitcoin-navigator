@@ -4,7 +4,13 @@ import type { Category, Criteria, Provider, ComparisonData } from './types'
 function getClient() {
   return createClient(
     process.env.NEXT_PUBLIC_SUPABASE_URL!,
-    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
+    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
+    {
+      global: {
+        fetch: (url: RequestInfo | URL, init?: RequestInit) =>
+          fetch(url, { ...init, next: { revalidate: 3600 } } as RequestInit),
+      },
+    }
   )
 }
 
