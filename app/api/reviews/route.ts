@@ -7,12 +7,20 @@ const MAX_BODY_LENGTH = 2000
 const MIN_BODY_LENGTH = 30
 
 function sanitize(text: string): string {
-  // HTML-Tags entfernen, Whitespace normalisieren
   return text
     .replace(/<[^>]*>/g, '')
     .replace(/&[a-z]+;/gi, ' ')
     .trim()
     .slice(0, MAX_BODY_LENGTH)
+}
+
+function escapeHtml(str: string): string {
+  return str
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#39;')
 }
 
 export async function POST(req: NextRequest) {
@@ -197,7 +205,7 @@ async function sendReviewNotification({
               </tr>
             </table>
             <div style="background: #f7f6f3; border-radius: 8px; padding: 16px; font-size: 14px; color: #333; line-height: 1.6; margin-bottom: 24px;">
-              ${body.replace(/\n/g, '<br>')}
+              ${escapeHtml(body).replace(/\n/g, '<br>')}
             </div>
             <a href="https://supabase.com/dashboard/project/xllborggqanaufzkthvb/editor?table=user_reviews"
               style="display: inline-block; background: #1a1a1a; color: #fff; padding: 12px 24px; border-radius: 8px; font-weight: 700; font-size: 14px; text-decoration: none;">

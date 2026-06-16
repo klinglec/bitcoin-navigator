@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useMemo } from 'react'
+import { useState, useMemo, useRef, useCallback } from 'react'
 import Link from 'next/link'
 import type { ComparisonData, Criteria, Provider, CriteriaValue } from '@/lib/types'
 import FilterBar from './FilterBar'
@@ -43,13 +43,96 @@ function formatMetricValue(cv: CriteriaValue, criteria: Criteria): string {
   return cv.value_text ?? '–'
 }
 
-function ProviderCard({ provider, metricCriteria, boolCriteria, textCriteria, promoCodeCriteria, isFirst }: {
+const EXAMPLE_AMOUNTS = [10, 100, 500, 1000]
+
+function DualRangeSlider({ min, max, step, value, onChange }: {
+  min: number; max: number; step: number
+  value: [number, number]
+  onChange: (v: [number, number]) => void
+}) {
+  const trackRef = useRef<HTMLDivElement>(null)
+  const dragging  = useRef<'min' | 'max' | null>(null)
+  const valueRef  = useRef(value)
+  valueRef.current = value
+
+  const pct = (v: number) => ((v - min) / (max - min)) * 100
+
+  const valueFromX = useCallback((clientX: number) => {
+    if (!trackRef.current) return min
+    const rect = trackRef.current.getBoundingClientRect()
+    const raw  = min + Math.max(0, Math.min(1, (clientX - rect.left) / rect.width)) * (max - min)
+    return Math.round(raw / step) * step
+  }, [min, max, step])
+
+  const onMove = useCallback((e: PointerEvent) => {
+    const v   = valueFromX(e.clientX)
+    const cur = valueRef.current
+    if (dragging.current === 'min') onChange([Math.min(v, cur[1] - step), cur[1]])
+    if (dragging.current === 'max') onChange([cur[0], Math.max(v, cur[0] + step)])
+  }, [valueFromX, onChange, step])
+
+  const onUp = useCallback(() => {
+    dragging.current = null
+    window.removeEventListener('pointermove', onMove)
+  }, [onMove])
+
+  const onDown = (e: React.PointerEvent<HTMLDivElement>) => {
+    if (!trackRef.current) return
+    const rect    = trackRef.current.getBoundingClientRect()
+    const clickPct = (e.clientX - rect.left) / rect.width
+    const minPct   = (value[0] - min) / (max - min)
+    const maxPct   = (value[1] - min) / (max - min)
+    dragging.current = Math.abs(clickPct - minPct) <= Math.abs(clickPct - maxPct) ? 'min' : 'max'
+    window.addEventListener('pointermove', onMove)
+    window.addEventListener('pointerup', onUp, { once: true })
+  }
+
+  const minP = pct(value[0])
+  const maxP = pct(value[1])
+
+  return (
+    <div ref={trackRef} onPointerDown={onDown} style={{ position: 'relative', height: '20px', cursor: 'pointer', touchAction: 'none' }}>
+      <div style={{ position: 'absolute', top: '50%', left: 0, right: 0, height: '3px', background: 'var(--border)', transform: 'translateY(-50%)', borderRadius: '2px' }} />
+      <div style={{ position: 'absolute', top: '50%', left: `${minP}%`, right: `${100 - maxP}%`, height: '3px', background: 'var(--text-primary)', transform: 'translateY(-50%)', borderRadius: '2px' }} />
+      {[minP, maxP].map((p, i) => (
+        <div key={i} style={{ position: 'absolute', left: `calc(${p}% - 8px)`, top: '50%', transform: 'translateY(-50%)', width: '16px', height: '16px', background: 'var(--surface)', border: '2px solid var(--text-primary)', borderRadius: '50%', boxShadow: '0 1px 3px rgba(0,0,0,0.15)' }} />
+      ))}
+    </div>
+  )
+}
+
+/** Effektive Gebühr in % für einen Einsteiger (immer Taker / Sofortkauf) */
+function getFeePct(provider: Provider): { sparplan: number | null; sofortkauf: number | null } {
+  const model = provider.values['pricing_model']?.value_text
+  const maker = provider.values['maker_fee']?.value_number ?? null
+  const taker = provider.values['taker_fee']?.value_number ?? null
+  const spread = provider.values['spread_pct']?.value_number ?? null
+
+  if (model === 'Maker/Taker') return { sparplan: null, sofortkauf: taker }
+  if (model === 'Spread') return { sparplan: null, sofortkauf: spread ?? taker }
+  if (model === 'Flat-Fee') {
+    if (maker !== null && taker !== null && maker !== taker) {
+      // z.B. 21bitcoin: Sparplan vs. Sofortkauf
+      return { sparplan: maker, sofortkauf: taker }
+    }
+    return { sparplan: null, sofortkauf: spread ?? maker }
+  }
+  return { sparplan: null, sofortkauf: null }
+}
+
+function formatEur(eur: number): string {
+  if (eur < 0.01) return '< 0,01 €'
+  return eur.toLocaleString('de-DE', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) + ' €'
+}
+
+function ProviderCard({ provider, metricCriteria, boolCriteria, textCriteria, promoCodeCriteria, isFirst, selectedAmount }: {
   provider: Provider
   metricCriteria: Criteria[]
   boolCriteria: Criteria[]
   textCriteria: Criteria[]
   promoCodeCriteria: Criteria | undefined
   isFirst: boolean
+  selectedAmount: number | null
 }) {
   const flag = provider.hq_country ? (COUNTRY_FLAGS[provider.hq_country] ?? '') : ''
   const promoCode = promoCodeCriteria ? provider.values[promoCodeCriteria.slug]?.value_text : null
@@ -155,6 +238,39 @@ function ProviderCard({ provider, metricCriteria, boolCriteria, textCriteria, pr
               </div>
             )
           })}
+          {/* ── Gebührenrechner ── */}
+          {selectedAmount !== null && (() => {
+            const { sparplan, sofortkauf } = getFeePct(provider)
+            if (sofortkauf === null) return null
+            const costSofort = (selectedAmount * sofortkauf) / 100
+            const costSparplan = sparplan !== null ? (selectedAmount * sparplan) / 100 : null
+            return (
+              <div
+                className="px-3 py-2 rounded-lg"
+                style={{ background: 'var(--surface-alt)', border: '0.5px solid var(--border)' }}
+              >
+                <p className="text-xs mb-1" style={{ color: 'var(--text-secondary)' }}>
+                  Kosten für {selectedAmount.toLocaleString('de-DE')} €
+                </p>
+                {costSparplan !== null ? (
+                  <div className="flex flex-col gap-0.5">
+                    <p className="font-bold text-sm" style={{ color: 'var(--text-primary)' }}>
+                      {formatEur(costSparplan)}
+                      <span className="font-normal text-xs ml-1" style={{ color: 'var(--text-secondary)' }}>Sparplan</span>
+                    </p>
+                    <p className="text-xs" style={{ color: 'var(--text-secondary)' }}>
+                      {formatEur(costSofort)} Sofortkauf
+                    </p>
+                  </div>
+                ) : (
+                  <p className="font-bold text-sm" style={{ color: 'var(--text-primary)' }}>
+                    {formatEur(costSofort)}
+                  </p>
+                )}
+              </div>
+            )
+          })()}
+
           {promoCode && (
             <div>
               <p className="text-xs mb-0.5" style={{ color: 'var(--text-secondary)' }}>Promo-Code</p>
@@ -184,6 +300,17 @@ export default function ComparisonView({ data }: { data: ComparisonData }) {
   const { category, providers } = data
   const [filters, setFilters] = useState<ActiveFilters>({ booleans: {}, selects: {} })
   const [sort, setSort] = useState<SortState | null>(null)
+  const [selectedAmount, setSelectedAmount] = useState<number | null>(null)
+  const isBoersen = category.slug === 'boersen'
+  const isHardwareWallets = category.slug === 'hardware-wallets'
+
+  // Preisbereich für Hardware Wallets
+  const allPrices = providers
+    .map(p => p.values['price_eur']?.value_number)
+    .filter((v): v is number => v !== null && v !== undefined)
+  const priceMin = allPrices.length ? Math.floor(Math.min(...allPrices)) : 0
+  const priceMax = allPrices.length ? Math.ceil(Math.max(...allPrices)) : 500
+  const [priceRange, setPriceRange] = useState<[number, number]>([priceMin, priceMax])
 
   const metricCriteria = category.criteria.filter(
     c => c.is_highlighted && (c.data_type === 'percentage' || c.data_type === 'number') && c.slug !== 'promo_code'
@@ -208,9 +335,15 @@ export default function ComparisonView({ data }: { data: ComparisonData }) {
         const val = p.values[slug]?.value_text
         if (!val || !allowed.includes(val)) return false
       }
+      if (isHardwareWallets) {
+        const price = p.values['price_eur']?.value_number
+        if (price !== null && price !== undefined) {
+          if (price < priceRange[0] || price > priceRange[1]) return false
+        }
+      }
       return true
     })
-  }, [providers, filters])
+  }, [providers, filters, isHardwareWallets, priceRange])
 
   const sorted = useMemo(() => {
     const sortSlug = sort?.slug ?? defaultSortSlug
@@ -286,6 +419,58 @@ export default function ComparisonView({ data }: { data: ComparisonData }) {
         )}
       </div>
 
+      {/* ── Preisbereich-Slider (nur Hardware Wallets) ── */}
+      {isHardwareWallets && (
+        <div className="px-4 py-3 rounded-xl border" style={{ borderColor: 'var(--border)', background: 'var(--surface)' }}>
+          <div className="flex items-center justify-between mb-4">
+            <span className="text-xs font-medium" style={{ color: 'var(--text-secondary)' }}>Preisbereich</span>
+            <span className="text-xs font-bold" style={{ color: 'var(--text-primary)' }}>
+              {priceRange[0]} € – {priceRange[1]} €
+              {(priceRange[0] > priceMin || priceRange[1] < priceMax) && (
+                <button onClick={() => setPriceRange([priceMin, priceMax])} className="ml-2 font-normal" style={{ color: 'var(--text-tertiary)' }}>×</button>
+              )}
+            </span>
+          </div>
+          <DualRangeSlider
+            min={priceMin} max={priceMax} step={5}
+            value={priceRange}
+            onChange={setPriceRange}
+          />
+          <div className="flex justify-between mt-3">
+            <span className="text-xs" style={{ color: 'var(--text-tertiary)' }}>{priceMin} €</span>
+            <span className="text-xs" style={{ color: 'var(--text-tertiary)' }}>{priceMax} €</span>
+          </div>
+        </div>
+      )}
+
+      {/* ── Gebührenrechner Selektor (nur Börsen) ── */}
+      {isBoersen && (
+        <div className="flex flex-wrap items-center gap-2 py-3 px-4 rounded-xl border" style={{ borderColor: 'var(--border)', background: 'var(--surface)' }}>
+          <span className="text-xs font-medium mr-1" style={{ color: 'var(--text-secondary)' }}>
+            Gebühren berechnen für:
+          </span>
+          {EXAMPLE_AMOUNTS.map(amount => (
+            <button
+              key={amount}
+              onClick={() => setSelectedAmount(prev => prev === amount ? null : amount)}
+              className="text-xs px-3 py-1.5 rounded-full border transition-all font-medium"
+              style={{
+                background: selectedAmount === amount ? 'var(--text-primary)' : 'transparent',
+                borderColor: selectedAmount === amount ? 'var(--text-primary)' : 'var(--border)',
+                color: selectedAmount === amount ? 'var(--bg)' : 'var(--text-secondary)',
+              }}
+            >
+              {amount.toLocaleString('de-DE')} €
+            </button>
+          ))}
+          {selectedAmount !== null && (
+            <span className="text-xs ml-auto" style={{ color: 'var(--text-tertiary)' }}>
+              Schätzwerte · Spreads und Gebühren können variieren · Aktuelle Konditionen beim Anbieter prüfen
+            </span>
+          )}
+        </div>
+      )}
+
       {/* ── Provider list ── */}
       {sorted.length === 0 ? (
         <div
@@ -305,6 +490,7 @@ export default function ComparisonView({ data }: { data: ComparisonData }) {
               textCriteria={textCriteria}
               promoCodeCriteria={promoCodeCriteria}
               isFirst={i === 0}
+              selectedAmount={isBoersen ? selectedAmount : null}
             />
           ))}
         </div>
