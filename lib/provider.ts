@@ -20,6 +20,7 @@ export interface ProviderDetail {
   name: string
   logo_url: string | null
   website_url: string
+  affiliate_url: string | null
   hq_country: string | null
   is_verified: boolean
   description: string | null
@@ -48,7 +49,8 @@ export async function getProviderDetail(slug: string): Promise<ProviderDetail | 
           category_id,
           categories(slug, name)
         )
-      )
+      ),
+      affiliate_links(url, is_active)
     `)
     .eq('slug', slug)
     .eq('is_active', true)
@@ -83,12 +85,15 @@ export async function getProviderDetail(slug: string): Promise<ProviderDetail | 
     group.items.sort((a, b) => a.criteria.sort_order - b.criteria.sort_order)
   }
 
+  const activeAffiliate = ((p.affiliate_links ?? []) as { url: string; is_active: boolean }[]).find(l => l.is_active)
+
   return {
     id: p.id,
     slug: p.slug,
     name: p.name,
     logo_url: p.logo_url,
     website_url: p.website_url,
+    affiliate_url: activeAffiliate?.url ?? null,
     hq_country: p.hq_country,
     is_verified: p.is_verified,
     description: p.description,

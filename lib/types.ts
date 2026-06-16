@@ -37,6 +37,7 @@ export interface Provider {
   name: string
   logo_url: string | null
   website_url: string
+  affiliate_url: string | null  // Affiliate-Link wenn vorhanden, sonst null
   hq_country: string | null
   is_verified: boolean
   values: Record<string, CriteriaValue> // keyed by criteria slug

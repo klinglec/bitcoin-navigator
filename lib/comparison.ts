@@ -44,7 +44,8 @@ export async function getComparisonData(categorySlug: string): Promise<Compariso
       sort_order,
       providers(
         id, slug, name, logo_url, website_url, hq_country, is_verified,
-        criteria_values(criteria_id, value_number, value_boolean, value_text, value_json, notes)
+        criteria_values(criteria_id, value_number, value_boolean, value_text, value_json, notes),
+        affiliate_links(url, is_active)
       )
     `)
     .eq('category_id', category.id)
@@ -59,6 +60,7 @@ export async function getComparisonData(categorySlug: string): Promise<Compariso
       website_url: string; hq_country: string | null; is_verified: boolean
       criteria_values: { criteria_id: string; value_number: number | null
         value_boolean: boolean | null; value_text: string | null; value_json: unknown }[]
+      affiliate_links: { url: string; is_active: boolean }[]
     }
 
     const values: Provider['values'] = {}
@@ -67,12 +69,15 @@ export async function getComparisonData(categorySlug: string): Promise<Compariso
       if (criteria) values[criteria.slug] = cv
     }
 
+    const activeAffiliate = (p.affiliate_links ?? []).find(l => l.is_active)
+
     return {
       id: p.id,
       slug: p.slug,
       name: p.name,
       logo_url: p.logo_url,
       website_url: p.website_url,
+      affiliate_url: activeAffiliate?.url ?? null,
       hq_country: p.hq_country,
       is_verified: p.is_verified,
       values,

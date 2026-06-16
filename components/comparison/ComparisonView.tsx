@@ -282,7 +282,7 @@ function ProviderCard({ provider, metricCriteria, boolCriteria, textCriteria, pr
         {/* ── CTA ── */}
         <div className="flex items-center px-5 py-4 border-t sm:border-t-0 sm:border-l lg:border-l" style={{ borderColor: 'var(--border)' }}>
           <a
-            href={provider.website_url}
+            href={provider.affiliate_url ?? provider.website_url}
             target="_blank"
             rel="noopener noreferrer sponsored"
             className="whitespace-nowrap px-5 py-2.5 rounded-lg text-sm font-bold transition-all hover:opacity-80"

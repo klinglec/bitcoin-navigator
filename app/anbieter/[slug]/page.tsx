@@ -170,7 +170,7 @@ export default async function ProviderPage({ params }: { params: Promise<{ slug:
                 </p>
               )}
             </div>
-            <a href={provider.website_url} target="_blank" rel="noopener noreferrer sponsored"
+            <a href={provider.affiliate_url ?? provider.website_url} target="_blank" rel="noopener noreferrer sponsored"
               className="flex-shrink-0 px-6 py-3 rounded-lg font-bold text-sm transition-all hover:opacity-90"
               style={{ background: 'var(--cta-bg)', color: 'var(--cta-text)' }}>
               Zur Website →
