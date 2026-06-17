@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState, useEffect, Suspense } from 'react'
 import { useSearchParams } from 'next/navigation'
 import Link from 'next/link'
 import SiteHeader from '@/components/SiteHeader'
@@ -99,7 +99,7 @@ function buildRecommendations(profile: SetupProfile): Recommendation[] {
 }
 
 // ── Haupt-Komponente ─────────────────────────────────────────────
-export default function SetupPage() {
+function SetupWizard() {
   const searchParams = useSearchParams()
   const [profile, setProfile] = useState<SetupProfile>(EMPTY_PROFILE)
   const [currentStep, setCurrentStep] = useState<Step>('holdings')
@@ -459,5 +459,13 @@ export default function SetupPage() {
 
       </main>
     </div>
+  )
+}
+
+export default function SetupPage() {
+  return (
+    <Suspense fallback={null}>
+      <SetupWizard />
+    </Suspense>
   )
 }
