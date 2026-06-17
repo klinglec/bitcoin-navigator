@@ -72,29 +72,59 @@ export default function Impressum() {
 
         <section>
           <h2 className="text-sm font-mono uppercase tracking-widest mb-3" style={{ color: "var(--accent)" }}>
-            Haftungsausschluss
+            Haftungsausschluss & Risikohinweis
           </h2>
-          <p className="leading-relaxed text-sm">
-            Alle Angaben zu Gebühren, Preisen und Konditionen wurden sorgfältig
-            recherchiert und werden regelmäßig aktualisiert. Dennoch können sich
-            Angebote ohne vorherige Ankündigung ändern. Für die Richtigkeit,
-            Vollständigkeit und Aktualität der dargestellten Informationen wird
-            keine Gewähr übernommen. Die Nutzung dieser Website erfolgt auf
-            eigene Verantwortung.
-          </p>
-        </section>
 
-        <section>
-          <h2 className="text-sm font-mono uppercase tracking-widest mb-3" style={{ color: "var(--accent)" }}>
-            Keine Anlageberatung
-          </h2>
-          <p className="leading-relaxed text-sm">
-            Die Inhalte dieser Website dienen ausschließlich der Information
-            und stellen keine Anlage-, Steuer- oder Rechtsberatung dar.
-            Investitionen in Bitcoin und Kryptowährungen sind mit erheblichen
-            Risiken verbunden. Bitte konsultiere bei Bedarf einen zugelassenen
-            Finanzberater.
-          </p>
+          <div className="rounded-xl border p-4 mb-5 text-sm leading-relaxed"
+            style={{ borderColor: "var(--border)", background: "var(--surface-alt)" }}>
+            <p className="font-semibold mb-2" style={{ color: "var(--text-primary)" }}>
+              Kein Ersatz für professionelle Finanzberatung
+            </p>
+            <p>
+              Bitcoin Navigator ist ein kostenloses Informations- und Planungsangebot.
+              Alle Vergleiche, Rechner und Inhalte dieser Website dienen
+              ausschließlich allgemeinen Informationszwecken und stellen in
+              keiner Weise eine Anlageberatung, Vermögensberatung,
+              Finanzportfolioverwaltung oder individuelle Empfehlung im Sinne
+              des Wertpapierhandelsgesetzes (WpHG) oder der europäischen
+              MiFID-II-Richtlinie dar.
+            </p>
+          </div>
+
+          <div className="space-y-4 text-sm leading-relaxed">
+            <p>
+              <span className="font-semibold" style={{ color: "var(--text-primary)" }}>Keine Finanzberatung: </span>
+              Der Betreiber dieser Website erbringt keine erlaubnispflichtigen
+              Finanzdienstleistungen im Sinne des § 32 KWG oder § 15 WpIG und
+              untersteht keiner Aufsicht durch die Bundesanstalt für
+              Finanzdienstleistungsaufsicht (BaFin). Die Inhalte dieser Website
+              empfehlen weder den Kauf noch den Verkauf von Bitcoin oder anderen
+              Vermögenswerten.
+            </p>
+
+            <p>
+              <span className="font-semibold" style={{ color: "var(--text-primary)" }}>Risikohinweis: </span>
+              Bitcoin ist eine hochvolatile Anlageklasse. Die auf dieser Website
+              dargestellten Preisprognosen und Rechenergebnisse basieren auf
+              mathematischen Modellen (u. a. dem Bitcoin Power Law) sowie
+              historischen Marktdaten. Modellbasierte Projektionen sind keine
+              Garantie für zukünftige Kursentwicklungen – tatsächliche Ergebnisse
+              können erheblich abweichen. Ein Totalverlust des eingesetzten
+              Kapitals ist möglich.
+            </p>
+
+            <p>
+              <span className="font-semibold" style={{ color: "var(--text-primary)" }}>Haftung: </span>
+              Der Betreiber übernimmt keinerlei Haftung für Entscheidungen, die
+              auf Grundlage der hier bereitgestellten Informationen oder
+              Berechnungen getroffen werden. Alle Angaben zu Gebühren, Preisen
+              und Konditionen wurden sorgfältig recherchiert, können sich jedoch
+              ohne Vorankündigung ändern. Die Nutzung dieser Website und ihrer
+              Rechner erfolgt auf eigene Verantwortung. Bei konkreten Anlage-
+              oder Steuerfragen wende dich bitte an einen zugelassenen Finanz-
+              oder Steuerberater.
+            </p>
+          </div>
         </section>
       </div>
     </div>
