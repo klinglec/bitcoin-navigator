@@ -273,39 +273,53 @@ export async function generateAmberConnectUrl(
               const event: NostrEvent = data[2]
               if (event.kind !== 24133) return
 
-              // NIP-04 versuchen, bei Fehler NIP-44
+              // Verschlüsselungsmethode erkennen und für Antworten merken
+              const { nip44 } = await import('nostr-tools')
               let decrypted: string
+              let useNip44 = false
               try {
-                decrypted = await nip04.decrypt(localSecretHex, event.pubkey, event.content)
-              } catch {
-                const { nip44 } = await import('nostr-tools')
+                // NIP-44 zuerst versuchen (Primal, nsec.app)
                 const convKey = nip44.getConversationKey(localSecretKey, event.pubkey)
                 decrypted = nip44.decrypt(event.content, convKey)
+                useNip44 = true
+              } catch {
+                // Fallback NIP-04 (ältere Signer)
+                decrypted = await nip04.decrypt(localSecretHex, event.pubkey, event.content)
+                useNip44 = false
               }
+
+              // Hilfsfunktion: mit derselben Methode verschlüsseln wie der Signer
+              async function encrypt(plaintext: string): Promise<string> {
+                if (useNip44) {
+                  const convKey = nip44.getConversationKey(localSecretKey, remotePubkey || event.pubkey)
+                  return nip44.encrypt(plaintext, convKey)
+                }
+                return nip04.encrypt(localSecretHex, remotePubkey || event.pubkey, plaintext)
+              }
+
               const parsed = JSON.parse(decrypted)
 
               if (phase === 'connect' && parsed.method === 'connect') {
                 remotePubkey = event.pubkey
-                onStatus('Verbunden! Fordere Signatur an…')
+                onStatus(`Verbunden via NIP-${useNip44 ? '44' : '04'}! Fordere Signatur an…`)
 
-                // Ack zurückschicken
+                // Ack zurückschicken (gleiche Verschlüsselung wie Signer)
                 const ackReq = JSON.stringify({ id: parsed.id, result: 'ack', error: '' })
-                const encAck = await nip04.encrypt(localSecretHex, remotePubkey, ackReq)
+                const encAck = await encrypt(ackReq)
                 const ackEvent = finalizeEvent({
                   kind: 24133,
                   created_at: Math.floor(Date.now() / 1000),
                   tags: [['p', remotePubkey]],
                   content: encAck,
                 }, localSecretKey)
-                // Ack auf allen Relays publishen
                 sockets.forEach(s => { if (s.readyState === WebSocket.OPEN) s.send(JSON.stringify(['EVENT', ackEvent])) })
 
-                // Challenge signieren lassen
+                // Challenge signieren lassen (gleiche Verschlüsselung)
                 phase = 'sign'
                 signId = crypto.randomUUID()
                 const challenge = createChallengeEvent(remotePubkey)
                 const signReq = JSON.stringify({ id: signId, method: 'sign_event', params: [JSON.stringify(challenge)] })
-                const encSign = await nip04.encrypt(localSecretHex, remotePubkey, signReq)
+                const encSign = await encrypt(signReq)
                 const signEv = finalizeEvent({
                   kind: 24133,
                   created_at: Math.floor(Date.now() / 1000),
