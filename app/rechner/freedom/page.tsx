@@ -3,6 +3,7 @@
 import { useState, useMemo, useRef, useCallback } from 'react'
 import Link from 'next/link'
 import SiteHeader from '@/components/SiteHeader'
+import BoersenCTA from '@/components/BoersenCTA'
 import { modelPrice, toLocalCurrency, PriceModel } from '@/lib/powerLaw'
 import { useBtcPrice, formatPrice, Currency } from '@/lib/useBtcPrice'
 
@@ -554,6 +555,8 @@ export default function FreedomRechner() {
               Alle Werte basieren auf dem Power Law Modell und sind Projektionen, keine Garantien.
               Steuerliche Behandlung gemäß individuellem Szenario. Keine Anlageberatung.
             </p>
+
+            <BoersenCTA context="freedom" />
           </div>
         </div>
       </main>

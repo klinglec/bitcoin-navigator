@@ -3,6 +3,7 @@
 import { useState, useMemo, useRef, useCallback } from 'react'
 import Link from 'next/link'
 import SiteHeader from '@/components/SiteHeader'
+import BoersenCTA from '@/components/BoersenCTA'
 import { modelPrice, toLocalCurrency, PriceModel } from '@/lib/powerLaw'
 import { useBtcPrice, formatPrice, Currency } from '@/lib/useBtcPrice'
 
@@ -503,6 +504,8 @@ export default function EntnahmeRechner() {
               Projektionen basieren auf dem Power Law Modell. Steuerliche Behandlung gemäß gewähltem Szenario –
               individuelle Besteuerung kann abweichen. Keine Steuer- oder Anlageberatung.
             </p>
+
+            <BoersenCTA context="entnahme" />
           </div>
         </div>
       </main>

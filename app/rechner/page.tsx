@@ -22,28 +22,10 @@ const TOOLS = [
     description: 'Wie lange reicht dein Bitcoin-Stack bei regelmäßiger Entnahme? Mit §23 EStG Steuerberechnung für Deutschland.',
   },
   {
-    href: '/rechner/altersvorsorge-vergleich',
-    title: 'Altersvorsorge-Vergleich',
-    subtitle: 'Bitcoin vs. ETF vs. Riester vs. bAV',
-    description: 'Bitcoin DCA gegen ETF, Riester-Rente, betriebliche Altersvorsorge, Immobilie und Gold – gleiche Sparrate, gleicher Zeitraum.',
-  },
-  {
-    href: '/rechner/fair-price',
-    title: 'Fair Price',
-    subtitle: 'Power Law · Datumsrechner · Zielpreis',
-    description: 'Ist Bitcoin gerade günstig oder teuer? Der Power Law Fair Value für jedes Datum – und wann ein Zielpreis laut Modell erreicht wird.',
-  },
-  {
     href: '/rechner/freedom',
     title: 'Freedom-Rechner',
     subtitle: 'Finanzielle Freiheit · Aufbau & Entnahme',
     description: 'Wie viel musst du monatlich kaufen um mit Bitcoin finanziell frei zu werden? Aufbauphase und Entnahmephase in einem Tool.',
-  },
-  {
-    href: '/rechner/buy-borrow-die',
-    title: 'Buy. Borrow. Die.',
-    subtitle: 'Kein Verkauf · Kredit · Steuerfrei',
-    description: 'Bitcoin als Sicherheit hinterlegen, Kredit aufnehmen und steuerfrei davon leben – ohne einen Satoshi zu verkaufen.',
   },
 ]
 

@@ -5,8 +5,33 @@ const RESEND_API_KEY = process.env.RESEND_API_KEY
 if (!RESEND_API_KEY) throw new Error('RESEND_API_KEY nicht gesetzt')
 const RESEND_KEY: string = RESEND_API_KEY
 
+// In-memory rate limit: max 3 Anfragen pro IP pro Stunde
+const rateLimitMap = new Map<string, { count: number; resetAt: number }>()
+const RATE_LIMIT = 3
+const RATE_WINDOW_MS = 60 * 60 * 1000
+
+function isRateLimited(ip: string): boolean {
+  const now = Date.now()
+  const entry = rateLimitMap.get(ip)
+  if (!entry || now > entry.resetAt) {
+    rateLimitMap.set(ip, { count: 1, resetAt: now + RATE_WINDOW_MS })
+    return false
+  }
+  if (entry.count >= RATE_LIMIT) return true
+  entry.count++
+  return false
+}
+
 export async function POST(req: NextRequest) {
   try {
+    const ip = req.headers.get('x-forwarded-for')?.split(',')[0] ?? 'unknown'
+    if (isRateLimited(ip)) {
+      return NextResponse.json(
+        { error: 'Zu viele Anfragen. Bitte warte eine Stunde.' },
+        { status: 429 }
+      )
+    }
+
     const { email } = await req.json()
     if (!email || typeof email !== 'string') {
       return NextResponse.json({ error: 'E-Mail fehlt' }, { status: 400 })

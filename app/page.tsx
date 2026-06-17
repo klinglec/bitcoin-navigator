@@ -146,6 +146,33 @@ export default function Home() {
           </div>
         </section>
 
+        {/* ── SETUP CTA ── */}
+        <section className="px-6 md:px-12 pb-12 max-w-5xl">
+          <Link
+            href="/setup"
+            className="flex items-center justify-between gap-6 rounded-2xl p-6 border transition-all hover:border-gray-400 group"
+            style={{ background: 'var(--surface)', borderColor: 'var(--border)', textDecoration: 'none' }}
+          >
+            <div>
+              <p className="text-xs font-mono tracking-widest uppercase mb-2" style={{ color: 'var(--text-tertiary)' }}>
+                Neu
+              </p>
+              <h2 className="text-xl font-bold mb-1" style={{ color: 'var(--text-primary)', letterSpacing: '-0.02em' }}>
+                Mein Bitcoin-Setup
+              </h2>
+              <p className="text-sm" style={{ color: 'var(--text-secondary)' }}>
+                Beantworte 5 Fragen — wir zeigen dir genau, welche Börse, Wallet und Backup-Lösung du brauchst.
+              </p>
+            </div>
+            <div
+              className="flex-shrink-0 px-5 py-3 rounded-xl text-sm font-bold transition-all group-hover:opacity-90"
+              style={{ background: 'var(--cta-bg)', color: 'var(--cta-text)', whiteSpace: 'nowrap' }}
+            >
+              Setup starten →
+            </div>
+          </Link>
+        </section>
+
         {/* ── STATS ── */}
         <section className="px-6 md:px-12 pb-16 max-w-5xl">
           <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
