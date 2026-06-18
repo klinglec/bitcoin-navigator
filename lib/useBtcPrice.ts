@@ -2,7 +2,7 @@
 
 import { useState, useEffect, useRef } from 'react'
 
-export type Currency = 'EUR' | 'USD'
+export type Currency = 'EUR' | 'USD' | 'CHF'
 
 export function useBtcPrice(currency: Currency = 'EUR') {
   const [price, setPrice] = useState<number | null>(null)
@@ -13,7 +13,7 @@ export function useBtcPrice(currency: Currency = 'EUR') {
     setPrice(null)
     setChange24h(null)
 
-    const pair = currency === 'USD' ? 'btcusdt' : 'btceur'
+    const pair = currency === 'USD' ? 'btcusdt' : 'btceur'  // CHF: kein Binance-Pair, Näherung via EUR
     let cleaned = false
 
     function connect() {

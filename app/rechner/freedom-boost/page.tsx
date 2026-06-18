@@ -14,7 +14,7 @@ import {
 } from '@/lib/powerLaw'
 
 // ── Formatierung ──────────────────────────────────────────────────
-const CURRENCY_SYMBOL: Record<Currency, string> = { EUR: '€', USD: '$' }
+const CURRENCY_SYMBOL: Record<Currency, string> = { EUR: '€', USD: '$', CHF: 'CHF' }
 const MODEL_LABELS: Record<PriceModel, string> = {
   power_law:  'Power Law Median',
   cycle_4yr:  '4-Jahres-Zyklus',
@@ -779,17 +779,17 @@ function buildYearTable(pts: ChartPoint[], freedomIdx: number, withLoan: boolean
 // ── Hauptkomponente ───────────────────────────────────────────────
 export default function FreedomBoost() {
   // Basis-Eingaben (identisch mit Freedom-Rechner)
-  const [currentAge, setCurrentAge]       = useState(35)
-  const [freedomAge, setFreedomAge]       = useState(55)
-  const [lifeExpectancy, setLifeExp]      = useState(85)
-  const [currentBtc, setCurrentBtc]       = useState(0.1)
+  const [currentAge, setCurrentAge]       = useState(30)
+  const [freedomAge, setFreedomAge]       = useState(60)
+  const [lifeExpectancy, setLifeExp]      = useState(80)
+  const [currentBtc, setCurrentBtc]       = useState(0.05)
   const [netMonthly, setNetMonthly]       = useState(3000)
   const [taxRate, setTaxRate]             = useState(0)
   const [buffer, setBuffer]               = useState(1.2)
-  const [model, setModel]                 = useState<PriceModel>('power_law')
+  const [model, setModel]                 = useState<PriceModel>('lower_band')
   const [currency, setCurrency]           = useState<Currency>('EUR')
   const [inflation, setInflation]         = useState(true)
-  const [inflationRate, setInflationRate] = useState(3)
+  const [inflationRate, setInflationRate] = useState(4)
 
   // Aufbau-Boost Eingaben
   const [withBoost, setWithBoost]             = useState(false)
@@ -1103,7 +1103,7 @@ export default function FreedomBoost() {
             <div className="flex gap-2">
               <div className="flex-1 rounded-xl border p-3 text-xs" style={{ borderColor: withBoost ? '#f59e0b' : 'var(--border)', background: withBoost ? 'rgba(245,158,11,0.05)' : 'var(--surface)' }}>
                 <p className="font-medium mb-0.5" style={{ color: withBoost ? '#854F0B' : 'var(--text-tertiary)' }}>Aufbau-Boost</p>
-                <p style={{ color: withBoost ? '#854F0B' : 'var(--text-tertiary)' }}>{withBoost ? `⚡ LTV ${(boostLtv*100).toFixed(0)}%` : 'Inaktiv'}</p>
+                <p style={{ color: withBoost ? '#854F0B' : 'var(--text-tertiary)' }}>{withBoost ? `LTV ${(boostLtv*100).toFixed(0)}%` : 'Inaktiv'}</p>
               </div>
               <div className="flex-1 rounded-xl border p-3 text-xs" style={{ borderColor: withLoan ? '#1a1a1a' : 'var(--border)', background: withLoan ? 'var(--surface-alt)' : 'var(--surface)' }}>
                 <p className="font-medium mb-0.5" style={{ color: withLoan ? 'var(--text-primary)' : 'var(--text-tertiary)' }}>Entnahme-Boost</p>
@@ -1254,7 +1254,7 @@ export default function FreedomBoost() {
                 <div className="flex items-center justify-between mb-3">
                   <div>
                     <p className="font-medium text-sm" style={{ color: 'var(--text-primary)' }}>
-                      ⚡ Aufbau-Boost
+                      Aufbau-Boost
                     </p>
                     <p className="text-xs" style={{ color: 'var(--text-tertiary)' }}>Stack per Kredit sofort vergrößern</p>
                   </div>
@@ -1269,7 +1269,7 @@ export default function FreedomBoost() {
                   <button onClick={() => setWithBoost(true)}
                     className="flex-1 py-2 rounded-lg text-sm font-medium border transition-all"
                     style={{ background: withBoost ? '#f59e0b' : 'transparent', color: withBoost ? '#fff' : 'var(--text-secondary)', borderColor: withBoost ? '#f59e0b' : 'var(--border)' }}>
-                    Sofort-Boost ⚡
+                    Sofort-Boost
                   </button>
                 </div>
 
@@ -1319,7 +1319,7 @@ export default function FreedomBoost() {
                 <div className="flex items-center justify-between mb-3">
                   <div>
                     <p className="font-medium text-sm" style={{ color: 'var(--text-primary)' }}>
-                      🏦 Entnahme-Boost
+                      Entnahme-Boost
                     </p>
                     <p className="text-xs" style={{ color: 'var(--text-tertiary)' }}>Im Ruhestand Kredit statt verkaufen</p>
                   </div>
