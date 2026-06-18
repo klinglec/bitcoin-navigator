@@ -779,9 +779,9 @@ function buildYearTable(pts: ChartPoint[], freedomIdx: number, withLoan: boolean
 // ── Hauptkomponente ───────────────────────────────────────────────
 export default function FreedomBoost() {
   // Basis-Eingaben (identisch mit Freedom-Rechner)
-  const [currentAge, setCurrentAge]       = useState(30)
-  const [freedomAge, setFreedomAge]       = useState(60)
-  const [lifeExpectancy, setLifeExp]      = useState(80)
+  const [currentAge, setCurrentAge]       = useState(40)
+  const [freedomAge, setFreedomAge]       = useState(58)
+  const [lifeExpectancy, setLifeExp]      = useState(85)
   const [currentBtc, setCurrentBtc]       = useState(0.05)
   const [netMonthly, setNetMonthly]       = useState(3000)
   const [taxRate, setTaxRate]             = useState(0)
