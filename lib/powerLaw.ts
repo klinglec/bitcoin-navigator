@@ -101,6 +101,19 @@ export function powerLawCAGR(fromYear: number, toYear: number): number {
   return Math.pow(to / from, 1 / years) - 1
 }
 
+/** Oberes Band (symmetrisch zum unteren Band im Log-Raum) ≈ 2.86× Median */
+export const UPPER_BAND_MULT = 1 / 0.35  // ≈ 2.857
+
+export function powerLawUpperBand(date: Date = new Date()): number {
+  return powerLawPrice(date) * UPPER_BAND_MULT
+}
+
+/** USD → lokale Währung (invers) */
+export function fromLocalCurrency(localPrice: number, currency: string): number {
+  const FX_INV: Record<string, number> = { USD: 1, EUR: 1 / 0.925, CHF: 1 / 0.91 }
+  return localPrice * (FX_INV[currency] ?? 1)
+}
+
 /** Datum an dem BTC laut Power Law einen Zielpreis (USD) erreicht */
 export function dateForTargetPrice(targetUsd: number): Date | null {
   // Invertiere: d = 10^((log10(P) + 17.016) / 5.845)

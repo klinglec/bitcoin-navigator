@@ -28,6 +28,12 @@ const TOOLS = [
     title: 'Freedom-Rechner',
     subtitle: 'Finanzielle Freiheit · Sparplan · Kredit-Option',
     description: 'Wie viel musst du monatlich kaufen um finanziell frei zu werden? Mit optionaler Kredit-Strategie: Stack bleibt intact, kein Bitcoin verkaufen.',
+  },
+  {
+    href: '/rechner/fair-price',
+    title: 'Fair Price & Power Law',
+    subtitle: 'Datumsrechner · Zielpreis · Chart bis 2045',
+    description: 'Wann ist Bitcoin fair bewertet? Datumsrechner für Fair Value & Bodenpreis, Zielpreis-Rechner und historischer Power Law Chart mit Projektion.',
     badge: 'Neu',
   },
 ]
