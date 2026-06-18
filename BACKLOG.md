@@ -2,6 +2,64 @@
 
 ---
 
+## ⭐ HÖCHSTE PRIORITÄT: Review-Agent (Aggregation + KI-Zusammenfassung → Datenbank)
+
+Agent, der Nutzerbewertungen zu Bitcoin-Produkten aus dem Internet aggregiert, per KI zu eigenen Einschätzungen verdichtet und diese organisch wachsend in die Datenbank schreibt. Kein Kopieren fremder Texte — eigener Content auf Basis externer Quellen.
+
+### Konzept
+Statt fremde Review-Texte zu kopieren (rechtlich problematisch, SEO-schwach) liest der Agent 10–20 Reviews pro Produkt aus verschiedenen Quellen, destilliert daraus eine strukturierte Einschätzung in eigenen Worten und verlinkt auf die Originalquellen. Das erzeugt einzigartigen, indexierbaren Content der rechtlich sauber ist.
+
+### Quellen (nach Priorität)
+- **Trustpilot** — Börsen: Bitpanda, Kraken, Relai, Coinbase (DE-Bewertungen)
+- **Reddit** — r/Bitcoin, r/BitcoinDE, r/DACH (Produktnamen-Suche via Reddit API)
+- **Hersteller-Websites** — ledger.com, trezor.io, shiftcrypto.ch (eigene Review-Sektionen)
+- **Amazon.de** — Ledger, Trezor, Seed-Backup-Produkte (nur Zusammenfassung, kein Textkopie; Amazon Product Advertising API statt direktes Scraping)
+- **Bitcoin-Foren & Blogs** — Einzelne Erfahrungsberichte als Signalquelle
+
+### Technische Architektur
+
+**Agent-Pipeline pro Produkt:**
+1. Quellen crawlen: Trustpilot, Reddit API, Hersteller-Site (Playwright für JS-Rendering)
+2. Reviews sammeln: Rohtexte temporär im Speicher (nicht in DB schreiben)
+3. KI-Verdichtung (Claude API): Aus 10–20 Rohtexten → strukturierte Einschätzung generieren
+   - Stärken (3–5 Punkte), Schwächen (2–3 Punkte), Gesamturteil
+   - Ton: sachlich, nutzerorientiert, DACH-spezifisch
+   - Sprache: Deutsch
+4. Rating ableiten: Durchschnitt der Quell-Ratings → normalisiert auf 1–5
+5. Quellenangaben sammeln: URLs der verwendeten Reviews als Referenzliste
+6. Qualitätscheck: Mindest-Quellenanzahl (≥5), Plausibilitätsprüfung
+7. Zufälliges Delay (2–8h) vor DB-Schreibung — organisch wirkend
+8. In Supabase schreiben
+
+**Datenstruktur (Erweiterung `reviews`-Tabelle):**
+```sql
+ALTER TABLE reviews ADD COLUMN IF NOT EXISTS
+  review_type     text DEFAULT 'user',     -- 'user' | 'aggregated'
+  source_urls     text[],                  -- Quellenlinks als Array
+  sources_count   int,                     -- Wie viele Reviews wurden aggregiert
+  crawled_at      timestamptz,
+  language        text DEFAULT 'de',
+  avg_source_rating numeric(3,2),          -- Durchschnitts-Rating der Quellen
+  agent_version   text;                    -- Welche Agent-Version hat das erzeugt
+```
+
+**Scheduler:** Vercel Cron Job (`/api/cron/aggregate-reviews`), täglich nachts
+**Rate:** 2–3 Produkte pro Nacht, damit Wachstum organisch wirkt
+**Secrets:** `ANTHROPIC_API_KEY`, `REDDIT_CLIENT_ID`, `REDDIT_SECRET`, `DEEPL_API_KEY` (optional)
+
+### UI-Darstellung
+- Aggregierte Reviews als eigene Sektion: "Einschätzung aus dem Netz"
+- Quellenangaben transparent sichtbar: "Basiert auf 14 Reviews von Trustpilot, Reddit und ledger.com"
+- Datum der Aggregation sichtbar
+- Klar getrennt von echten Community-Reviews auf der eigenen Plattform
+
+### KPIs
+- Ziel: 2–3 neue aggregierte Produkt-Einschätzungen pro Nacht
+- Nach 4 Wochen: alle aktiven Produkte mit mindestens einer Einschätzung versorgt
+- SEO-Ziel: einzigartiger, strukturierter Content pro Produktseite
+
+---
+
 ## Kategorie: Bitcoin-Heizungen (`/vergleich/bitcoin-heizungen`)
 
 Vergleich von Bitcoin-Heizgeräten (Miner-as-Heater) für den Heimbereich.

@@ -9,6 +9,14 @@ export const metadata = {
 
 const articles = [
   {
+    slug: "bitcoin-power-law",
+    title: "Das Bitcoin Power Law: Warum der Kurs langfristig einem Muster folgt",
+    desc: "Was ist das Power Law Modell, wie funktioniert die Formel, und was bedeuten Median, unteres Band und die vier Zonen für deine Bitcoin-Strategie?",
+    tag: "Analyse",
+    readTime: "7 min",
+    date: "18. Juni 2026",
+  },
+  {
     slug: "bitcoin-zahlungsdienste",
     title: "Mit Bitcoin im Alltag bezahlen – so geht's heute schon",
     desc: "Gutscheine, eSIMs und Handy-Aufladungen mit Bitcoin und Lightning kaufen. Bitrefill vs. Cryptorefills für den DACH-Raum.",

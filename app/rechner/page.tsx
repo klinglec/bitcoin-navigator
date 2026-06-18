@@ -21,11 +21,14 @@ const TOOLS = [
     subtitle: 'Schrittweise verkaufen · Steueroptimiert',
     description: 'Wie lange reicht dein Bitcoin-Stack bei regelmäßiger Entnahme? Mit §23 EStG Steuerberechnung für Deutschland.',
   },
+  // Freedom-Rechner (ausgeblendet — Funktionalität im Freedom Boost enthalten)
+  // { href: '/rechner/freedom', title: 'Freedom-Rechner', ... },
   {
-    href: '/rechner/freedom',
+    href: '/rechner/freedom-boost',
     title: 'Freedom-Rechner',
-    subtitle: 'Finanzielle Freiheit · Aufbau & Entnahme',
-    description: 'Wie viel musst du monatlich kaufen um mit Bitcoin finanziell frei zu werden? Aufbauphase und Entnahmephase in einem Tool.',
+    subtitle: 'Finanzielle Freiheit · Sparplan · Kredit-Option',
+    description: 'Wie viel musst du monatlich kaufen um finanziell frei zu werden? Mit optionaler Kredit-Strategie: Stack bleibt intact, kein Bitcoin verkaufen.',
+    badge: 'Neu',
   },
 ]
 
@@ -56,9 +59,17 @@ export default function RechnerPage() {
               className="group rounded-xl border p-6 transition-all hover:border-gray-400"
               style={{ background: 'var(--surface)', borderColor: 'var(--border)' }}
             >
-                  <h2 className="font-bold text-lg mb-0.5" style={{ color: 'var(--text-primary)', letterSpacing: '-0.02em' }}>
-                {tool.title}
-              </h2>
+              <div className="flex items-start justify-between gap-2 mb-0.5">
+                <h2 className="font-bold text-lg" style={{ color: 'var(--text-primary)', letterSpacing: '-0.02em' }}>
+                  {tool.title}
+                </h2>
+                {'badge' in tool && tool.badge && (
+                  <span className="text-xs font-medium px-2 py-0.5 rounded-full flex-shrink-0 mt-1"
+                    style={{ background: 'rgba(34,197,94,0.12)', color: '#16a34a' }}>
+                    {tool.badge}
+                  </span>
+                )}
+              </div>
               <p className="text-xs mb-3 font-mono" style={{ color: 'var(--text-tertiary)' }}>
                 {tool.subtitle}
               </p>

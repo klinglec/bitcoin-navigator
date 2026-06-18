@@ -51,6 +51,48 @@ export function toLocalCurrency(usdPrice: number, currency: string): number {
   return usdPrice * (FX[currency] ?? 1)
 }
 
+// ── Power Law Position & Risikoanalyse ──────────────────────────
+
+export type PowerLawZone = 'undervalued' | 'fair' | 'elevated' | 'extreme'
+
+export const ZONE_THRESHOLDS = {
+  undervalued: 0.5,   // < 0.5× Median
+  fair:        1.5,   // 0.5–1.5×
+  elevated:    2.5,   // 1.5–2.5×
+  // extreme:  > 2.5×
+}
+
+/** Vielfaches des aktuellen Power Law Medians */
+export function powerLawMultiple(livePrice: number, currency: string): number {
+  const median = toLocalCurrency(powerLawPrice(new Date()), currency)
+  if (median <= 0) return 1
+  return livePrice / median
+}
+
+/** Einordnung in Zone anhand des Multiples */
+export function getPowerLawZone(multiple: number): PowerLawZone {
+  if (multiple < ZONE_THRESHOLDS.undervalued) return 'undervalued'
+  if (multiple < ZONE_THRESHOLDS.fair)        return 'fair'
+  if (multiple < ZONE_THRESHOLDS.elevated)    return 'elevated'
+  return 'extreme'
+}
+
+export type LiqRisk = 'safe' | 'moderate' | 'critical'
+
+/**
+ * Prüft Liquidationspreis gegen Median und unteres Band.
+ * critical  = Liq. über unterem Band aber unter Median (normale Korrektur reicht)
+ * moderate  = Liq. unter unterem Band (nur extremster Crash würde liquidieren)
+ * safe      = Liq. deutlich unter unterem Band
+ */
+export function getLiqRisk(liqPrice: number, currency: string): LiqRisk {
+  const median    = toLocalCurrency(powerLawPrice(new Date()), currency)
+  const lowerBand = toLocalCurrency(powerLawFloor(new Date()), currency)
+  if (liqPrice >= median)    return 'critical'
+  if (liqPrice >= lowerBand) return 'moderate'
+  return 'safe'
+}
+
 /** Jährliche Wachstumsrate des Power Law Modells (CAGR-Näherung) */
 export function powerLawCAGR(fromYear: number, toYear: number): number {
   const from = powerLawPrice(new Date(`${fromYear}-01-01`))
