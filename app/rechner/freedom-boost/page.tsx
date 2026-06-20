@@ -1,6 +1,7 @@
 'use client'
 
-import { useState, useMemo, useRef, useCallback } from 'react'
+import { useState, useMemo, useRef, useCallback, Suspense } from 'react'
+import { useSearchParams } from 'next/navigation'
 import Link from 'next/link'
 import SiteHeader from '@/components/SiteHeader'
 import BoersenCTA from '@/components/BoersenCTA'
@@ -777,7 +778,7 @@ function buildYearTable(pts: ChartPoint[], freedomIdx: number, withLoan: boolean
 }
 
 // ── Hauptkomponente ───────────────────────────────────────────────
-export default function FreedomBoost() {
+function FreedomBoostInner() {
   // Basis-Eingaben (identisch mit Freedom-Rechner)
   const [currentAge, setCurrentAge]       = useState(40)
   const [freedomAge, setFreedomAge]       = useState(58)
@@ -806,6 +807,12 @@ export default function FreedomBoost() {
   const [capitalized, setCapitalized]     = useState(true)
 
   const { price: livePrice, change24h } = useBtcPrice(currency)
+
+  // ── Setupkosten aus Warenkorb (via URL-Params) ────────────────
+  const searchParams        = useSearchParams()
+  const setupCostOnetime    = Number(searchParams.get('setup_cost_onetime') ?? 0)
+  const setupCostMonthly    = Number(searchParams.get('setup_cost_monthly') ?? 0)
+  const hasSetupCosts       = setupCostOnetime > 0 || setupCostMonthly > 0
 
   const accMonths      = (freedomAge - currentAge) * 12
   const withdrawMonths = (lifeExpectancy - freedomAge) * 12
@@ -1536,10 +1543,131 @@ export default function FreedomBoost() {
               {' '}Keine Anlageberatung.
             </p>
 
+            {/* ── RC-10: Setupkosten-Block ──────────────────────────────── */}
+            {hasSetupCosts && (() => {
+              const effectiveSparrate = requiredMonthlyFinal - setupCostMonthly
+              // Schätzung: wie viele Monate mehr beim Sparplan-Aufbau?
+              // Näherung: Einmalkosten ≈ ein Monat Sparrate entfällt in Monat 1
+              //           Laufende Gebühren → wir suchen neues accMonths für effectiveSparrate
+              let delayMonths = 0
+              if (effectiveSparrate > 0 && requiredMonthlyFinal > 0) {
+                // Grober Delay durch monatliche Gebühren: Verhältnis der Sparraten
+                const ratioFactor = requiredMonthlyFinal / effectiveSparrate
+                delayMonths += Math.round((ratioFactor - 1) * accMonths)
+              }
+              if (setupCostOnetime > 0 && requiredMonthlyFinal > 0) {
+                // Einmalkosten ≈ verlorene Monate am Anfang
+                delayMonths += Math.round(setupCostOnetime / requiredMonthlyFinal)
+              }
+
+              return (
+                <div
+                  className="rounded-xl p-5 border"
+                  style={{ background: 'var(--surface-alt)', borderColor: 'var(--border)' }}
+                >
+                  <div className="flex items-center gap-2 mb-3">
+                    <span className="text-xs font-semibold px-2 py-0.5 rounded-full" style={{ background: '#1a1a1a', color: '#fff' }}>
+                      Warenkorb
+                    </span>
+                    <p className="text-xs font-medium" style={{ color: 'var(--text-primary)' }}>
+                      Setupkosten einkalkuliert
+                    </p>
+                  </div>
+                  <div className="grid grid-cols-2 sm:grid-cols-3 gap-4 mb-3">
+                    {setupCostOnetime > 0 && (
+                      <div>
+                        <p className="text-xs mb-0.5" style={{ color: 'var(--text-tertiary)' }}>Einmalkosten (Monat 1)</p>
+                        <p className="font-semibold text-sm" style={{ color: 'var(--text-primary)' }}>
+                          {setupCostOnetime.toLocaleString('de-DE', { maximumFractionDigits: 0 })} €
+                        </p>
+                      </div>
+                    )}
+                    {setupCostMonthly > 0 && (
+                      <div>
+                        <p className="text-xs mb-0.5" style={{ color: 'var(--text-tertiary)' }}>Laufende Gebühren</p>
+                        <p className="font-semibold text-sm" style={{ color: 'var(--text-primary)' }}>
+                          {fmtC(setupCostMonthly, currency)}/Mo.
+                        </p>
+                      </div>
+                    )}
+                    {setupCostMonthly > 0 && (
+                      <div>
+                        <p className="text-xs mb-0.5" style={{ color: 'var(--text-tertiary)' }}>Effektive Sparrate</p>
+                        <p className="font-semibold text-sm" style={{ color: effectiveSparrate < 0 ? '#ef4444' : 'var(--text-primary)' }}>
+                          {fmtC(Math.max(0, effectiveSparrate), currency)}/Mo.
+                        </p>
+                      </div>
+                    )}
+                  </div>
+                  {delayMonths > 0 && (
+                    <p className="text-xs pt-3 border-t" style={{ color: 'var(--text-secondary)', borderColor: 'var(--border)' }}>
+                      Inkl. Setupkosten verschiebt sich dein Freedom-Zeitpunkt um ca.{' '}
+                      <strong style={{ color: 'var(--text-primary)' }}>+{delayMonths} Monat{delayMonths !== 1 ? 'e' : ''}</strong>
+                      {' '}— Näherungswert auf Basis des Power Law Modells.
+                    </p>
+                  )}
+                  <Link
+                    href="/setup/warenkorb"
+                    className="text-xs mt-2 inline-block"
+                    style={{ color: 'var(--text-tertiary)', textDecoration: 'underline' }}
+                  >
+                    Warenkorb bearbeiten →
+                  </Link>
+                </div>
+              )
+            })()}
+
+            {/* ── RC-09: Setup-CTA ─────────────────────────────────────── */}
+            {(() => {
+              const targetBtc = withLoan ? btcAtFreedomLoan : btcAtFreedomBase
+              const params = new URLSearchParams({
+                from:          'freedom-boost',
+                monthly:       Math.round(requiredMonthlyFinal).toString(),
+                target_btc:    targetBtc.toFixed(6),
+                current_btc:   currentBtc.toFixed(6),
+                years:         (accMonths / 12).toFixed(1),
+                currency,
+                freedom_year:  freedomYear.toString(),
+                freedom_month: freedomMonth.toString(),
+              })
+              if (withLoan) params.set('with_loan', '1')
+              const setupUrl = `/setup?${params.toString()}`
+              return (
+                <div
+                  className="rounded-xl p-5 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4"
+                  style={{ background: 'var(--surface-alt)', border: '1.5px solid #1a1a1a' }}
+                >
+                  <div>
+                    <p className="font-semibold text-sm mb-0.5" style={{ color: 'var(--text-primary)' }}>
+                      Plan in Setup übernehmen
+                    </p>
+                    <p className="text-xs" style={{ color: 'var(--text-secondary)' }}>
+                      Sparplan, Custody und{withLoan ? ' Kredit-Interesse' : ' Empfehlungen'} werden vorausgefüllt.
+                    </p>
+                  </div>
+                  <Link
+                    href={setupUrl}
+                    className="flex-shrink-0 px-4 py-2 rounded-lg text-sm font-semibold transition-opacity hover:opacity-80"
+                    style={{ background: '#1a1a1a', color: '#fff', whiteSpace: 'nowrap' }}
+                  >
+                    Zum Setup →
+                  </Link>
+                </div>
+              )
+            })()}
+
             <BoersenCTA context="freedom" />
           </div>
         </div>
       </main>
     </div>
+  )
+}
+
+export default function FreedomBoost() {
+  return (
+    <Suspense fallback={null}>
+      <FreedomBoostInner />
+    </Suspense>
   )
 }

@@ -5,6 +5,9 @@ import Link from 'next/link'
 import type { ComparisonData, Criteria, Provider, CriteriaValue } from '@/lib/types'
 import FilterBar from './FilterBar'
 import PromoCodeButton from '@/components/PromoCodeButton'
+import AddToCartButton from '@/components/AddToCartButton'
+import SetupContextBar from '@/components/SetupContextBar'
+import type { CartCategory } from '@/lib/setupCart'
 
 interface ActiveFilters {
   booleans: Record<string, boolean>
@@ -125,7 +128,18 @@ function formatEur(eur: number): string {
   return eur.toLocaleString('de-DE', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) + ' €'
 }
 
-function ProviderCard({ provider, metricCriteria, boolCriteria, textCriteria, promoCodeCriteria, isFirst, selectedAmount }: {
+const CART_CATEGORIES: CartCategory[] = ['boersen', 'hardware-wallets', 'seed-backup']
+
+// Reihenfolge für den Setup-Flow
+const SETUP_FLOW: { category: CartCategory; label: string; href: string }[] = [
+  { category: 'hardware-wallets', label: 'Hardware Wallet', href: '/vergleich/hardware-wallets' },
+  { category: 'seed-backup',      label: 'Seed-Backup',     href: '/vergleich/seed-backup' },
+  { category: 'boersen',          label: 'Börse',           href: '/vergleich/boersen' },
+]
+
+interface NextCategory { label: string; href: string }
+
+function ProviderCard({ provider, metricCriteria, boolCriteria, textCriteria, promoCodeCriteria, isFirst, selectedAmount, categorySlug, nextCategory }: {
   provider: Provider
   metricCriteria: Criteria[]
   boolCriteria: Criteria[]
@@ -133,6 +147,8 @@ function ProviderCard({ provider, metricCriteria, boolCriteria, textCriteria, pr
   promoCodeCriteria: Criteria | undefined
   isFirst: boolean
   selectedAmount: number | null
+  categorySlug: string
+  nextCategory?: NextCategory
 }) {
   const flag = provider.hq_country ? (COUNTRY_FLAGS[provider.hq_country] ?? '') : ''
   const promoCode = promoCodeCriteria ? provider.values[promoCodeCriteria.slug]?.value_text : null
@@ -280,16 +296,53 @@ function ProviderCard({ provider, metricCriteria, boolCriteria, textCriteria, pr
         </div>
 
         {/* ── CTA ── */}
-        <div className="flex items-center px-5 py-4 border-t sm:border-t-0 sm:border-l lg:border-l" style={{ borderColor: 'var(--border)' }}>
+        <div className="flex flex-col items-stretch gap-2 px-5 py-4 border-t sm:border-t-0 sm:border-l lg:border-l" style={{ borderColor: 'var(--border)' }}>
           <a
             href={provider.affiliate_url ?? provider.website_url}
             target="_blank"
             rel="noopener noreferrer sponsored"
-            className="whitespace-nowrap px-5 py-2.5 rounded-lg text-sm font-bold transition-all hover:opacity-80"
+            className="whitespace-nowrap px-5 py-2.5 rounded-lg text-sm font-bold transition-all hover:opacity-80 text-center"
             style={{ background: 'var(--cta-bg)', color: 'var(--cta-text)' }}
           >
             Zur Website →
           </a>
+          {CART_CATEGORIES.includes(categorySlug as CartCategory) && (() => {
+            const isBoersen = categorySlug === 'boersen'
+            const isHW      = categorySlug === 'hardware-wallets'
+            const isSeed    = categorySlug === 'seed-backup'
+            const oneTimeCost = (isHW || isSeed)
+              ? (provider.values['price_eur']?.value_number ?? null)
+              : null
+            const feePercent  = isBoersen
+              ? (() => {
+                  const { sparplan, sofortkauf } = getFeePct(provider)
+                  return sparplan ?? sofortkauf
+                })()
+              : null
+            const promoCodeVal = promoCodeCriteria
+              ? provider.values[promoCodeCriteria.slug]?.value_text ?? null
+              : null
+            const promoBenefitVal = promoCodeCriteria
+              ? provider.values[promoCodeCriteria.slug]?.notes ?? null
+              : null
+            return (
+              <AddToCartButton
+                item={{
+                  productId:        provider.id,
+                  productSlug:      provider.slug,
+                  productName:      provider.name,
+                  category:         categorySlug as CartCategory,
+                  oneTimeCost,
+                  feePercent,
+                  affiliateUrl:     provider.affiliate_url,
+                  promoCode:        promoCodeVal,
+                  promoCodeBenefit: promoBenefitVal,
+                  productPageUrl:   `/anbieter/${provider.slug}`,
+                }}
+                nextCategory={nextCategory}
+              />
+            )
+          })()}
         </div>
       </div>
     </div>
@@ -301,7 +354,7 @@ export default function ComparisonView({ data }: { data: ComparisonData }) {
   const [filters, setFilters] = useState<ActiveFilters>({ booleans: {}, selects: {} })
   const [sort, setSort] = useState<SortState | null>(null)
   const [selectedAmount, setSelectedAmount] = useState<number | null>(null)
-  const isBoersen = category.slug === 'boersen'
+  const isBoersen       = category.slug === 'boersen'
   const isHardwareWallets = category.slug === 'hardware-wallets'
 
   // Preisbereich für Hardware Wallets
@@ -373,8 +426,17 @@ export default function ComparisonView({ data }: { data: ComparisonData }) {
     })
   }
 
+  // Nächste Kategorie im Setup-Flow bestimmen
+  const setupFlowIdx = SETUP_FLOW.findIndex(s => s.category === category.slug)
+  const nextCategoryInFlow = setupFlowIdx >= 0 && setupFlowIdx < SETUP_FLOW.length - 1
+    ? SETUP_FLOW[setupFlowIdx + 1]
+    : undefined
+
   return (
     <div className="flex flex-col gap-6">
+
+      {/* ── Setup-Kontext-Bar (erscheint wenn ?from=setup oder Warenkorb befüllt) ── */}
+      <SetupContextBar categorySlug={category.slug} />
 
       {/* ── Header ── */}
       <div>
@@ -491,6 +553,8 @@ export default function ComparisonView({ data }: { data: ComparisonData }) {
               promoCodeCriteria={promoCodeCriteria}
               isFirst={i === 0}
               selectedAmount={isBoersen ? selectedAmount : null}
+              categorySlug={category.slug}
+              nextCategory={nextCategoryInFlow}
             />
           ))}
         </div>

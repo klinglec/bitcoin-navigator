@@ -9,6 +9,14 @@ export const metadata = {
 
 const articles = [
   {
+    slug: "bitcoin-setup-kosten",
+    title: "Not your keys, not your coins: Was ein solides Bitcoin-Setup wirklich kostet",
+    desc: "Hardware Wallet, Seed-Backup, richtige Börse: Was ein vollständiges Setup kostet — und warum diese Kosten trivial sind, wenn Bitcoin dem Power Law folgt.",
+    tag: "Setup & Sicherheit",
+    readTime: "6 min",
+    date: "20. Juni 2026",
+  },
+  {
     slug: "bitcoin-power-law",
     title: "Das Bitcoin Power Law: Warum der Kurs langfristig einem Muster folgt",
     desc: "Was ist das Power Law Modell, wie funktioniert die Formel, und was bedeuten Median, unteres Band und die vier Zonen für deine Bitcoin-Strategie?",
