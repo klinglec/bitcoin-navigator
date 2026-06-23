@@ -69,14 +69,23 @@ export const EMPTY_PROFILE: SetupProfile = {
   importedFrom: null,
 }
 
-const STORAGE_KEY = 'btcnav_setup_profile'
+const STORAGE_KEY    = 'btcnav_setup_profile'
+const PROFILE_TTL_MS = 90 * 24 * 60 * 60 * 1000  // 90 Tage
 
 export function loadProfile(): SetupProfile {
   if (typeof window === 'undefined') return EMPTY_PROFILE
   try {
     const raw = localStorage.getItem(STORAGE_KEY)
     if (!raw) return EMPTY_PROFILE
-    return { ...EMPTY_PROFILE, ...JSON.parse(raw) }
+    const parsed = JSON.parse(raw)
+    // Legacy-Format (kein savedAt) → direkt verwenden
+    if (!parsed.savedAt) return { ...EMPTY_PROFILE, ...parsed }
+    // TTL prüfen
+    if (Date.now() - parsed.savedAt > PROFILE_TTL_MS) {
+      localStorage.removeItem(STORAGE_KEY)
+      return EMPTY_PROFILE
+    }
+    return { ...EMPTY_PROFILE, ...parsed.data }
   } catch {
     return EMPTY_PROFILE
   }
@@ -84,7 +93,7 @@ export function loadProfile(): SetupProfile {
 
 export function saveProfile(profile: SetupProfile): void {
   if (typeof window === 'undefined') return
-  localStorage.setItem(STORAGE_KEY, JSON.stringify(profile))
+  localStorage.setItem(STORAGE_KEY, JSON.stringify({ data: profile, savedAt: Date.now() }))
 }
 
 /**

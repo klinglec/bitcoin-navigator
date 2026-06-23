@@ -6,6 +6,7 @@ import SiteHeader from '@/components/SiteHeader'
 import {
   loadCart,
   removeFromCart,
+  clearCart,
   computeTotals,
   CATEGORY_LABELS,
   CART_CATEGORIES,
@@ -123,6 +124,13 @@ export default function WarenkorbPage() {
     setTotals(computeTotals(updated))
   }
 
+  function handleClearCart() {
+    if (!confirm('Warenkorb wirklich leeren?')) return
+    const empty = clearCart()
+    setCart(empty)
+    setTotals(computeTotals(empty))
+  }
+
   if (!cart) return null  // SSR guard
 
   const isEmpty = cart.items.length === 0
@@ -145,14 +153,25 @@ export default function WarenkorbPage() {
           <p className="text-xs tracking-widest uppercase mb-1 font-medium" style={{ color: 'var(--text-tertiary)' }}>
             Mein Setup
           </p>
-          <div className="flex items-baseline gap-3">
-            <h1 className="text-3xl md:text-4xl font-bold" style={{ letterSpacing: '-0.03em' }}>
-              Warenkorb
-            </h1>
+          <div className="flex items-baseline justify-between gap-3">
+            <div className="flex items-baseline gap-3">
+              <h1 className="text-3xl md:text-4xl font-bold" style={{ letterSpacing: '-0.03em' }}>
+                Warenkorb
+              </h1>
+              {!isEmpty && (
+                <span className="text-sm" style={{ color: 'var(--text-tertiary)' }}>
+                  {cart.items.length} Produkt{cart.items.length !== 1 ? 'e' : ''}
+                </span>
+              )}
+            </div>
             {!isEmpty && (
-              <span className="text-sm" style={{ color: 'var(--text-tertiary)' }}>
-                {cart.items.length} Produkt{cart.items.length !== 1 ? 'e' : ''}
-              </span>
+              <button
+                onClick={handleClearCart}
+                className="text-xs transition-all hover:opacity-70"
+                style={{ color: 'var(--text-tertiary)', background: 'none', border: 'none', cursor: 'pointer' }}
+              >
+                Warenkorb leeren
+              </button>
             )}
           </div>
           <Link href="/setup" className="text-xs mt-1 inline-block" style={{ color: 'var(--text-tertiary)', textDecoration: 'underline' }}>

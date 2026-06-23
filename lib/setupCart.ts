@@ -34,7 +34,8 @@ export interface CartTotals {
   monthlyFeeEur:   number | null   // totalFeePercent * sparrate / 100, null wenn sparrate unbekannt
 }
 
-const STORAGE_KEY = 'btcnav_setup_cart'
+const STORAGE_KEY  = 'btcnav_setup_cart'
+const CART_TTL_MS  = 30 * 24 * 60 * 60 * 1000  // 30 Tage
 
 export const EMPTY_CART: SetupCart = {
   items:    [],
@@ -49,7 +50,15 @@ export function loadCart(): SetupCart {
   try {
     const raw = localStorage.getItem(STORAGE_KEY)
     if (!raw) return EMPTY_CART
-    return { ...EMPTY_CART, ...JSON.parse(raw) }
+    const parsed = JSON.parse(raw)
+    // Legacy-Format (kein savedAt) → direkt verwenden, beim nächsten Save wird Timestamp ergänzt
+    if (!parsed.savedAt) return { ...EMPTY_CART, ...parsed }
+    // TTL prüfen
+    if (Date.now() - parsed.savedAt > CART_TTL_MS) {
+      localStorage.removeItem(STORAGE_KEY)
+      return EMPTY_CART
+    }
+    return { ...EMPTY_CART, ...parsed.data }
   } catch {
     return EMPTY_CART
   }
@@ -57,7 +66,7 @@ export function loadCart(): SetupCart {
 
 export function saveCart(cart: SetupCart): void {
   if (typeof window === 'undefined') return
-  localStorage.setItem(STORAGE_KEY, JSON.stringify(cart))
+  localStorage.setItem(STORAGE_KEY, JSON.stringify({ data: cart, savedAt: Date.now() }))
   window.dispatchEvent(new CustomEvent('btcnav:cart', { detail: cart }))
 }
 
