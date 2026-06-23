@@ -451,6 +451,18 @@ export default function ComparisonView({ data }: { data: ComparisonData }) {
         </p>
       </div>
 
+      {/* ── Risikohinweis ── */}
+      <div
+        className="flex items-start gap-2 text-xs px-3 py-2.5 rounded-lg"
+        style={{ background: '#f0ede8', color: '#888888' }}
+      >
+        <span style={{ flexShrink: 0, marginTop: '1px' }}>ℹ</span>
+        <span>
+          Bitcoin kann stark im Wert schwanken. Diese Seite ist kein Anlageberater —
+          alle Vergleiche dienen der Information, nicht der Anlageempfehlung.
+        </span>
+      </div>
+
       {/* ── Filters + Sort ── */}
       <div className="flex flex-wrap items-center justify-between gap-3">
         <FilterBar

@@ -25,6 +25,14 @@ export default function ReviewSection({ providerId, categoryId, providerName }: 
     })
   }, [])
 
+  function openForm() {
+    setShowForm(true)
+    // Kurz warten, dann zum Formular scrollen
+    setTimeout(() => {
+      document.getElementById('review-form')?.scrollIntoView({ behavior: 'smooth', block: 'start' })
+    }, 50)
+  }
+
   return (
     <section className="mt-12 pt-8 border-t" style={{ borderColor: '#e0ddd8' }}>
       <div className="flex items-center justify-between flex-wrap gap-4 mb-6">
@@ -36,23 +44,23 @@ export default function ReviewSection({ providerId, categoryId, providerName }: 
           user ? (
             <button
               onClick={() => setShowForm(v => !v)}
-              className="px-5 py-2 rounded-xl text-sm font-bold border transition-all hover:opacity-70"
-              style={{ background: '#ffffff', borderColor: '#e0ddd8', color: '#1a1a1a' }}
+              className="px-5 py-2 rounded-xl text-sm font-bold transition-all hover:opacity-80"
+              style={{ background: '#1a1a1a', color: '#ffffff', border: 'none', cursor: 'pointer' }}
             >
-              {showForm ? 'Abbrechen' : '+ Review schreiben'}
+              {showForm ? '✕ Abbrechen' : '+ Erfahrung teilen'}
             </button>
           ) : (
             <Link href="/account/login"
-              className="px-5 py-2 rounded-xl text-sm font-bold border transition-all hover:opacity-70"
-              style={{ background: '#ffffff', borderColor: '#e0ddd8', color: '#1a1a1a' }}>
-              Anmelden zum Bewerten
+              className="px-5 py-2 rounded-xl text-sm font-bold transition-all hover:opacity-80"
+              style={{ background: '#1a1a1a', color: '#ffffff', textDecoration: 'none' }}>
+              Anmelden & bewerten
             </Link>
           )
         )}
       </div>
 
       {showForm && user && (
-        <div className="mb-8">
+        <div className="mb-8" id="review-form">
           <ReviewForm
             providerId={providerId}
             categoryId={categoryId}
@@ -61,7 +69,11 @@ export default function ReviewSection({ providerId, categoryId, providerName }: 
         </div>
       )}
 
-      <ReviewList providerId={providerId} />
+      <ReviewList
+        providerId={providerId}
+        onWriteReview={user ? openForm : undefined}
+        isLoggedIn={!!user}
+      />
     </section>
   )
 }

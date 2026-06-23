@@ -295,6 +295,8 @@ export default function Home() {
             <span style={{ color: "var(--border)" }}>|</span>
             <Link href="/ratgeber" className="font-mono text-xs transition-colors hover:opacity-70" style={{ color: "var(--text-secondary)" }}>Ratgeber</Link>
             <span style={{ color: "var(--border)" }}>|</span>
+            <Link href="/ueber-uns" className="font-mono text-xs transition-colors hover:opacity-70" style={{ color: "var(--text-secondary)" }}>Über uns</Link>
+            <span style={{ color: "var(--border)" }}>|</span>
             <Link href="/impressum" className="font-mono text-xs transition-colors hover:opacity-70" style={{ color: "var(--text-secondary)" }}>Impressum</Link>
             <span style={{ color: "var(--border)" }}>|</span>
             <Link href="/datenschutz" className="font-mono text-xs transition-colors hover:opacity-70" style={{ color: "var(--text-secondary)" }}>Datenschutz</Link>

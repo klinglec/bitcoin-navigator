@@ -268,6 +268,59 @@ function FreedomPlanBanner({ profile, isFromRechner }: { profile: SetupProfile; 
   )
 }
 
+// ── Wizard Feedback ─────────────────────────────────────────────
+function WizardFeedback() {
+  const [submitted, setSubmitted] = useState(false)
+  const [hovered, setHovered]     = useState(0)
+
+  async function submit(rating: number) {
+    setSubmitted(true)
+    await fetch('/api/wizard-feedback', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ rating }),
+    })
+  }
+
+  if (submitted) {
+    return (
+      <p className="text-sm text-center py-2" style={{ color: 'var(--text-tertiary)' }}>
+        Danke für dein Feedback ✓
+      </p>
+    )
+  }
+
+  return (
+    <div className="text-center py-4">
+      <p className="text-xs mb-3" style={{ color: 'var(--text-secondary)' }}>
+        War diese Empfehlung hilfreich?
+      </p>
+      <div className="flex justify-center gap-1">
+        {[1, 2, 3, 4, 5].map(s => (
+          <button
+            key={s}
+            onClick={() => submit(s)}
+            onMouseEnter={() => setHovered(s)}
+            onMouseLeave={() => setHovered(0)}
+            style={{
+              background: 'none',
+              border: 'none',
+              cursor: 'pointer',
+              fontSize: '22px',
+              lineHeight: 1,
+              color: s <= hovered ? '#F7931A' : '#d0cdc8',
+              transition: 'color 0.1s',
+            }}
+            aria-label={`${s} von 5 Sternen`}
+          >
+            ★
+          </button>
+        ))}
+      </div>
+    </div>
+  )
+}
+
 // ── Haupt-Komponente ─────────────────────────────────────────────
 function SetupWizard() {
   const searchParams = useSearchParams()
@@ -729,6 +782,11 @@ function SetupWizard() {
                   </Link>
                 </div>
               )}
+
+              {/* ── Micro-Feedback ── */}
+              <div className="mt-2 mb-2 rounded-xl border" style={{ borderColor: 'var(--border)', background: 'var(--surface)' }}>
+                <WizardFeedback />
+              </div>
 
               <div className="pt-6 border-t flex justify-between items-center" style={{ borderColor: 'var(--border)' }}>
                 <button
