@@ -176,6 +176,19 @@ function ProviderCard({ provider, metricCriteria, boolCriteria, textCriteria, pr
               <span title="Verifiziert" style={{ color: 'var(--accent)', marginLeft: '4px', fontSize: '12px' }}>✓</span>
             )}
           </Link>
+          {provider.usp_badge && (
+            <p
+              className="text-xs mb-2 px-2 py-0.5 rounded inline-block"
+              style={{
+                background: 'rgba(247,147,26,0.10)',
+                color: 'var(--accent)',
+                border: '0.5px solid rgba(247,147,26,0.25)',
+                fontWeight: 500,
+              }}
+            >
+              {provider.usp_badge}
+            </p>
+          )}
           <p className="text-xs mb-3" style={{ color: 'var(--text-secondary)' }}>
             {flag && <span className="mr-1">{flag}</span>}
             {provider.hq_country}

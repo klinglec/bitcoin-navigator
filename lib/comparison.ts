@@ -43,7 +43,7 @@ export async function getComparisonData(categorySlug: string): Promise<Compariso
     .select(`
       sort_order,
       providers(
-        id, slug, name, logo_url, website_url, hq_country, is_verified,
+        id, slug, name, logo_url, website_url, hq_country, is_verified, usp_badge,
         criteria_values(criteria_id, value_number, value_boolean, value_text, value_json, notes),
         affiliate_links(url, is_active)
       )
@@ -57,7 +57,7 @@ export async function getComparisonData(categorySlug: string): Promise<Compariso
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const p = (row.providers as any) as {
       id: string; slug: string; name: string; logo_url: string | null
-      website_url: string; hq_country: string | null; is_verified: boolean
+      website_url: string; hq_country: string | null; is_verified: boolean; usp_badge: string | null
       criteria_values: { criteria_id: string; value_number: number | null
         value_boolean: boolean | null; value_text: string | null; value_json: unknown }[]
       affiliate_links: { url: string; is_active: boolean }[]
@@ -80,6 +80,7 @@ export async function getComparisonData(categorySlug: string): Promise<Compariso
       affiliate_url: activeAffiliate?.url ?? null,
       hq_country: p.hq_country,
       is_verified: p.is_verified,
+      usp_badge: p.usp_badge ?? null,
       values,
     }
   })

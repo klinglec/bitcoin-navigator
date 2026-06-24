@@ -1,6 +1,5 @@
 import { getComparisonData } from '@/lib/comparison'
 import ComparisonView from '@/components/comparison/ComparisonView'
-import BeginnerRecommendations from '@/components/comparison/BeginnerRecommendations'
 import SiteHeader from '@/components/SiteHeader'
 import Link from 'next/link'
 import { notFound } from 'next/navigation'
@@ -79,7 +78,6 @@ export default async function ComparisonPage({
       <SiteHeader activePath={`/vergleich/${category}`} />
 
       <main className="relative z-10 px-6 md:px-12 py-12">
-        <BeginnerRecommendations category={category} />
         <ComparisonView data={data} />
       </main>
 

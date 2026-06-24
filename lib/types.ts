@@ -40,6 +40,7 @@ export interface Provider {
   affiliate_url: string | null  // Affiliate-Link wenn vorhanden, sonst null
   hq_country: string | null
   is_verified: boolean
+  usp_badge: string | null
   values: Record<string, CriteriaValue> // keyed by criteria slug
 }
 
