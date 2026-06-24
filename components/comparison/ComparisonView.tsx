@@ -176,19 +176,6 @@ function ProviderCard({ provider, metricCriteria, boolCriteria, textCriteria, pr
               <span title="Verifiziert" style={{ color: 'var(--accent)', marginLeft: '4px', fontSize: '12px' }}>✓</span>
             )}
           </Link>
-          {provider.usp_badge && (
-            <p
-              className="text-xs mb-2 px-2 py-0.5 rounded inline-block"
-              style={{
-                background: 'rgba(247,147,26,0.10)',
-                color: 'var(--accent)',
-                border: '0.5px solid rgba(247,147,26,0.25)',
-                fontWeight: 500,
-              }}
-            >
-              {provider.usp_badge}
-            </p>
-          )}
           <p className="text-xs mb-3" style={{ color: 'var(--text-secondary)' }}>
             {flag && <span className="mr-1">{flag}</span>}
             {provider.hq_country}
@@ -304,6 +291,18 @@ function ProviderCard({ provider, metricCriteria, boolCriteria, textCriteria, pr
             <div>
               <p className="text-xs mb-0.5" style={{ color: 'var(--text-secondary)' }}>Promo-Code</p>
               <PromoCodeButton code={promoCode} benefit={promoBenefit} />
+            </div>
+          )}
+
+          {provider.usp_badge && (
+            <div
+              className="w-full pt-3 mt-1 border-t"
+              style={{ borderColor: 'var(--border)' }}
+            >
+              <p className="text-xs leading-relaxed" style={{ color: 'var(--text-secondary)' }}>
+                <span style={{ color: 'var(--accent)', marginRight: '5px', fontWeight: 600 }}>✦</span>
+                {provider.usp_badge}
+              </p>
             </div>
           )}
         </div>
