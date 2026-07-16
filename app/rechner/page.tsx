@@ -16,6 +16,13 @@ const TOOLS = [
     description: 'Regelmäßig Bitcoin kaufen – was ist dein Stack in 10 Jahren wert? Mit Power Law Projektion, Kauffrequenz und historischen Backtests.',
   },
   {
+    href: '/rechner/monte-carlo',
+    title: 'Monte-Carlo Sparplan',
+    subtitle: 'Realität vs. Zufall · 5.000 Szenarien · Backtest',
+    description: 'Starte einen Sparplan in der Vergangenheit und vergleiche den echten Kursverlauf mit tausenden Zufalls-Szenarien. War dein Ergebnis Glück, Pech oder typisch?',
+    badge: 'Neu',
+  },
+  {
     href: '/rechner/entnahme',
     title: 'Entnahmeplan',
     subtitle: 'Schrittweise verkaufen · Steueroptimiert',
